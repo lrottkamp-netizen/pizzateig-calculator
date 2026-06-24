@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1410">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pizzateig">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%231a1410'/%3E%3Ctext x='90' y='128' font-size='110' text-anchor='middle'%3E%F0%9F%8D%95%3C/text%3E%3C/svg%3E">
+<title>🍕 Pizzateig-Calculator · Napoletana · Direkt & Biga</title>
+<style>
+  :root{
+    --bg:#1a1410; --card:#241c16; --card2:#2e241c; --line:#3d3026;
+    --txt:#f3e9dd; --muted:#b09a85; --accent:#e8552d; --accent2:#f0a04b;
+    --green:#7bbf6a; --red:#e06a5a; --gold:#e8c468;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#2a1f17,#1a1410);
+    color:var(--txt);line-height:1.5;padding:24px 16px 64px;min-height:100vh;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+  header{text-align:center;margin-bottom:6px}
+  h1{font-size:1.9rem;letter-spacing:.5px}
+  h1 .em{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.9rem;margin-top:4px}
+
+  /* toggle bars */
+  .toggles{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:18px}
+  .tg{display:flex;flex-direction:column;gap:5px;align-items:center}
+  .tg .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
+  .seg{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{border:none;background:transparent;color:var(--muted);padding:7px 16px;border-radius:999px;font-size:.85rem;cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--accent);color:#fff}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .card h2{font-size:.78rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent2);margin-bottom:14px}
+  label{display:block;font-size:.82rem;color:var(--muted);margin:14px 0 5px}
+  .card > label:first-of-type{margin-top:0}
+  input[type=number],select{
+    width:100%;background:var(--card2);border:1px solid var(--line);color:var(--txt);
+    padding:10px 12px;border-radius:9px;font-size:1rem;font-variant-numeric:tabular-nums;
+  }
+  input:focus,select:focus{outline:none;border-color:var(--accent)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .slider-head{display:flex;justify-content:space-between;align-items:baseline}
+  .slider-head b{color:var(--txt);font-size:1.05rem}
+  input[type=range]{width:100%;accent-color:var(--accent);margin-top:6px}
+  .hint{font-size:.74rem;color:var(--muted);margin-top:5px}
+  .warn{font-size:.78rem;margin-top:8px;padding:8px 10px;border-radius:8px;display:none}
+  .warn.show{display:block}
+  .warn.ok{background:rgba(123,191,106,.12);color:var(--green);border:1px solid rgba(123,191,106,.3)}
+  .warn.bad{background:rgba(224,106,90,.12);color:var(--red);border:1px solid rgba(224,106,90,.35)}
+  .hide{display:none!important}
+
+  /* Results */
+  .results{margin-top:22px;background:linear-gradient(160deg,#2c211a,#241c16);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .results h2{font-size:.78rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent2);margin-bottom:14px}
+  .grpttl{font-size:.8rem;color:var(--gold);font-weight:700;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+  .grpttl:first-child{margin-top:0}
+  .ing{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:640px){.ing{grid-template-columns:repeat(2,1fr)}}
+  .ing .item{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:14px;text-align:center}
+  .ing .item .v{font-size:1.5rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;line-height:1.15}
+  .ing .item .v small{font-size:.8rem;font-weight:400;color:var(--muted)}
+  .ing .item .k{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+  .ing .item .sub{font-size:.68rem;color:var(--accent2);margin-top:2px}
+  .ing .item.accent{border-color:var(--accent);background:rgba(232,85,45,.1)}
+  .ing.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:640px){.ing.three{grid-template-columns:repeat(2,1fr)}}
+
+  .strip{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .pill{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.82rem;color:var(--muted)}
+  .pill b{color:var(--txt)}
+  .pill.hl{border-color:var(--gold);background:rgba(232,196,104,.1)}
+  .pill.hl b{color:var(--gold)}
+
+  .steps{margin-top:22px}
+  .steps h3{font-size:.95rem;color:var(--accent2);margin-bottom:10px}
+  .step{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+  .step .n{flex:0 0 26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .step .b{font-size:.9rem}
+  .step .b b{color:var(--gold)}
+  .step .day{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+  details{margin-top:14px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)}
+  details + details{margin-top:10px}
+  summary{cursor:pointer;font-size:.9rem;color:var(--accent2);font-weight:600}
+  details p, details li{font-size:.84rem;color:var(--txt);margin-top:8px;line-height:1.55}
+  details .muted{color:var(--muted)}
+  details ul{margin:6px 0 0 18px}
+  .ttl{color:var(--gold);font-weight:700}
+
+  .btnrow{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  button.act{background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:9px 16px;border-radius:9px;font-size:.85rem;cursor:pointer}
+  button.act:hover{border-color:var(--accent)}
+  button.act.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.act.perfect{display:block;width:100%;margin-top:14px;border-color:var(--gold);color:var(--gold);background:rgba(232,196,104,.08);font-weight:600}
+  button.act.perfect:hover{background:rgba(232,196,104,.18);border-color:var(--gold)}
+  .foot{text-align:center;color:var(--muted);font-size:.74rem;margin-top:26px;line-height:1.7}
+  .foot a{color:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🍕 Pizzateig-<span class="em">Calculator</span></h1>
+    <div class="sub">Pizza Napoletana · Ooni · von Hand knetbar · Trockenhefe-fähig</div>
+  </header>
+
+  <!-- TOGGLES -->
+  <div class="toggles">
+    <div class="tg">
+      <span class="lbl">Methode</span>
+      <div class="seg" id="segMethod">
+        <button data-v="direct" class="on">Direkt 48h</button>
+        <button data-v="biga">Biga (Vorteig)</button>
+      </div>
+    </div>
+    <div class="tg">
+      <span class="lbl">Mengen-Basis</span>
+      <div class="seg" id="segBasis">
+        <button data-v="pizzas" class="on">Nach Teigling</button>
+        <button data-v="flour">Nach Mehl</button>
+      </div>
+    </div>
+    <div class="tg">
+      <span class="lbl">Hefe-Typ</span>
+      <div class="seg" id="segYeast">
+        <button data-v="dry" class="on">Trocken</button>
+        <button data-v="fresh">Frisch</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div class="card">
+      <h2>① Teig &amp; Mehl</h2>
+
+      <label>Mehl</label>
+      <select id="flour"></select>
+      <div class="hint" id="flourHint"></div>
+
+      <div class="row" id="basisPizzas" style="margin-top:14px">
+        <div>
+          <label>Anzahl Pizzen</label>
+          <input type="number" id="pizzas" value="6" min="1" max="60" step="1">
+        </div>
+        <div>
+          <label>Teigling (g)</label>
+          <input type="number" id="ball" value="280" min="180" max="350" step="5">
+        </div>
+      </div>
+      <div id="pizzasTotal" style="margin-top:9px;font-size:.92rem;color:var(--gold);font-weight:600"></div>
+
+      <div class="row hide" id="basisFlour" style="margin-top:14px">
+        <div>
+          <label>Mehl gesamt (g)</label>
+          <input type="number" id="flourGrams" value="1000" min="200" max="10000" step="50">
+        </div>
+        <div>
+          <label>Anzahl Pizzen</label>
+          <input type="number" id="pizzas2" value="6" min="1" max="60" step="1">
+        </div>
+      </div>
+      <div id="flourTotal" class="hide" style="margin-top:9px;font-size:.92rem;color:var(--gold);font-weight:600"></div>
+
+      <label style="margin-top:16px">
+        <span class="slider-head"><span>Hydration (Wasser)</span><b><span id="hydVal">62</span>%</b></span>
+      </label>
+      <input type="range" id="hyd" min="55" max="78" value="62" step="1">
+      <div class="warn" id="hydWarn"></div>
+      <label style="margin-top:12px">Wasser direkt eingeben (g)</label>
+      <div class="row">
+        <input type="number" id="waterG" min="0" step="5">
+        <div style="display:flex;align-items:center;font-size:.82rem;color:var(--muted)" id="waterHint"></div>
+      </div>
+      <div class="hint">Mehr Wasser = luftiger. Geht aber nur so hoch, wie das Mehl es binden kann — darüber schnappt es aufs Limit zurück (sonst wird der Teig suppig).</div>
+
+      <label style="margin-top:16px">
+        <span class="slider-head"><span>Salz</span><b><span id="saltVal">3.0</span>%</b></span>
+      </label>
+      <input type="range" id="salt" min="2.0" max="3.5" value="3.0" step="0.1">
+      <div class="hint">Napoletana üblich 2,5–3,0 %.</div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card">
+      <h2>② Gärung &amp; Temperatur</h2>
+
+      <!-- direct schedule -->
+      <div id="schedDirect">
+        <div class="row">
+          <div>
+            <label>Kühlschrank-Stunden (gesamt)</label>
+            <input type="number" id="coldH" value="44" min="0" max="120" step="1">
+          </div>
+          <div>
+            <label>Kühlschrank-Temp (°C)</label>
+            <input type="number" id="coldT" value="4" min="2" max="10" step="0.5">
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label>Reife bei Raumtemp (h)</label>
+            <input type="number" id="rtH" value="4" min="0" max="24" step="0.5">
+          </div>
+          <div>
+            <label>Raumtemperatur (°C)</label>
+            <input type="number" id="rtT" value="21" min="14" max="32" step="0.5">
+          </div>
+        </div>
+        <div class="hint">Standard = 24h Stockgare + 20h Stückgare kalt (=44h), dann 4h akklimatisieren. Mehr Stunden ⇒ Rechner senkt automatisch die Hefe.</div>
+        <button class="act perfect" id="btnPerfect" onclick="setPerfect48(event)">✨ Perfekte 48h-Bedingungen setzen</button>
+        <div class="hint">Ideal: <b>4 °C</b> Kühlschrank · <b>44 h</b> kalt (24 + 20) · <b>4 h</b> Raumtemp (21 °C) · Teigziel <b>23 °C</b>. Bei 4 °C reift es langsam &amp; gleichmäßig, das Gluten bleibt stabil — der „gelingsichere" Korridor.</div>
+      </div>
+
+      <!-- biga schedule -->
+      <div id="schedBiga" class="hide">
+        <label>Biga-Reife</label>
+        <select id="bigaReife">
+          <option value="rt16">16 h bei Raumtemperatur (~18–20 °C) — Original</option>
+          <option value="fridge">1 h RT anspringen + 12–16 h Kühlschrank</option>
+        </select>
+        <label style="margin-top:14px">Raumtemperatur (°C)</label>
+        <input type="number" id="rtTb" value="20" min="14" max="30" step="0.5">
+        <div class="hint">Biga = fester, flockiger Vorteig (45 % Hydration). Wird NICHT glatt geknetet — darf trocken &amp; stückig sein. Original-Rezept von Teichners.</div>
+      </div>
+
+      <div style="border-top:1px solid var(--line);margin:16px 0 0;padding-top:14px"></div>
+      <div class="row">
+        <div>
+          <label>🎯 Ziel-Teigtemperatur (°C)</label>
+          <input type="number" id="ddt" value="23" min="18" max="26" step="0.5">
+        </div>
+        <div>
+          <label>Mehl-/Raumtemp (°C)</label>
+          <input type="number" id="flourT" value="21" min="10" max="30" step="0.5">
+        </div>
+      </div>
+      <div class="hint">Wassertemp wird so berechnet, dass dein Teig am Knetende ~23 °C hat. Über 25 °C bricht das Glutennetz (→ Teig verläuft). Reibung von Hand ~1 °C einkalkuliert.</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results">
+    <h2 id="resTitle">🧮 Dein Rezept</h2>
+    <div id="resBody"></div>
+
+    <div class="btnrow">
+      <button class="act primary" onclick="copyRecipe(event)">📋 Rezept kopieren</button>
+      <button class="act" onclick="resetAll()">↺ Zurücksetzen</button>
+    </div>
+  </div>
+
+  <!-- KNOWLEDGE -->
+  <details id="dSteps" open>
+    <summary>📖 Anleitung Schritt für Schritt</summary>
+    <div id="stepsBody"></div>
+    <p style="margin-top:14px;padding:10px 12px;border-radius:9px;background:rgba(232,196,104,.1);border:1px solid rgba(232,196,104,.3);color:var(--gold);font-weight:600">👉 Merksatz: Kugeln formt man <b>kalt</b>, Pizza öffnet man <b>warm</b>.</p>
+  </details>
+
+  <details>
+    <summary>💡 An zwei Tagen backen (Teichners Trick)</summary>
+    <p>Der Kühlschrank ist deine <b>Pause-Taste</b>. So bleibst du flexibel:</p>
+    <ul>
+      <li class="muted"><b>Direkt-Methode:</b> Vollen Teig ansetzen, aber pro Tag nur die Teiglinge rausnehmen, die du brauchst (3–4 h vorher). Der Rest bleibt kalt — Teiglinge halten <b>2–3 Tage</b> im Kühlschrank. Stell oben die Kühlstunden auf die Zeit bis zum <i>spätesten</i> Backtag (z. B. 44 h für Tag 1, ~68 h für Tag 2) → die Hefe sinkt automatisch, damit Tag-2-Teiglinge nicht überreifen.</li>
+      <li class="muted"><b>Biga-Methode (Original-Trick):</b> Statt nach dem Kneten direkt in die Stückgare zu gehen, den Hauptteig <b>am Stück 12–24 h zusätzlich in den Kühlschrank</b> (Stockgare). Das intensiviert das Aroma deutlich. Dann je Backtag <b>3 h vorher</b> die Ballen schleifen und in die Stückgare bei Raumtemperatur geben.<br>❄️ Kommt der Teig dafür aus dem Kühlschrank: <b>kalt schleifen</b> (straffer, klebt weniger), erst zum Backen warm öffnen.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>🛟 Hilfe! Teig klebt / kein Gluten / verläuft</summary>
+    <p><span class="ttl">① Teig klebt extrem &amp; lässt sich nicht formen</span><br>
+    <span class="muted"><b>Ursache:</b> Hydration zu hoch fürs Mehl/Routine, Gluten noch nicht entwickelt, oder Teig zu warm.<br>
+    <b>Lösung:</b> Mit <b>nassen</b> Händen statt Mehl arbeiten. Mehr Dehnen &amp; Falten mit Pausen (baut Gluten auf). Hydration 2–3 % runter (Pizzeria max ~65 %). Teig kühler halten. Autolyse vorab hilft enorm.</span></p>
+
+    <p style="margin-top:14px"><span class="ttl">② Teig reißt / wird nicht elastisch — „kein Klebe-Eiweiß", kein Fenstertest</span><br>
+    <span class="muted"><b>Ursache:</b> Mehl zu schwach (niedriges W / wenig Eiweiß) für die lange Gare → Eiweiß baut ab. ODER überreif: zu viel Hefe/Zeit/Wärme → Enzyme zersetzen das Gluten. ODER zu wenig geknetet.<br>
+    <b>Lösung:</b> Für lange/warme Garen <b>stärkeres Mehl</b> (Cuoco, Nuvola; 12–15 % Eiweiß) statt Pizzeria. Autolyse + mehr Falten. Wenn überreif: weniger Hefe / kälter / kürzer. Vor der Stockgare Fenstertest machen — Teig muss sich dünn dehnen lassen ohne zu reißen.</span></p>
+
+    <p style="margin-top:14px"><span class="ttl">③ Teiglinge laufen flach auseinander statt sich zu wölben („verlaufen", kaum aufgegangen)</span><br>
+    <span class="muted"><b>Ursache:</b> <b>Überreif</b> (overproofed) — das Gluten hat die Spannung verloren und hält kein Gas mehr. Meist: zu viel Hefe, zu warm oder zu lang. Bei schwachem Mehl + langer Gare doppelt schlimm.<br>
+    <b>Lösung:</b> Weniger Hefe (oben Kühlstunden hoch oder Temp runter → Rechner senkt die Hefe), kühler/kürzer reifen, stärkeres Mehl. <b>Faustregel:</b> Teigling, der sich kuppelt &amp; Spannung hält = perfekt; Teigling, der flach zerläuft = überreif → nächstes Mal Hefe/Zeit/Temp runter. Auch <b>fester rundwirken</b> (auf Spannung schleifen) gibt mehr Stand.</span></p>
+  </details>
+
+  <details>
+    <summary>🧊 Trockenhefe (Caputo) — Umrechnung &amp; Haltbarkeit</summary>
+    <p class="muted"><b>Umrechnung:</b> Trockenhefe = Frischhefe ÷ 3. Caputo Trockenhefe (Lievito Secco) ist aktive Trockenhefe und darf <b>direkt ins Mehl</b> (kein Vorlösen nötig).<br>
+    <b>Haltbarkeit:</b> Angebrochen luftdicht verschlossen im Kühlschrank <b>viele Monate</b> (oft fast ein Jahr) haltbar — kein Wegwerfen mehr wie bei Frischhefe.<br>
+    <b>Tipp:</b> Für die Mini-Mengen (~0,5–1,5 g) brauchst du eine <b>0,1-g-Feinwaage</b>.</p>
+  </details>
+
+  <div class="foot">
+    Direkt-Methode: Svens 48-Stunden-Teig · Biga-Methode: „Luftiger geht's nicht" — beide von
+    <a href="https://www.teichners.de" target="_blank" rel="noopener">Teichners</a>.
+    Smart-Hefe kalibriert auf 0,30 % Frischhefe @ 44 h/4 °C + 4 h/21 °C. Werte sind fundierte Richtwerte — dein Teigthermometer bleibt die Wahrheit. 🍕
+  </div>
+</div>
+
+<script>
+// ---- Mehl-Profile ---------------------------------------------------------
+const FLOURS = {
+  pizzeria: { name:"Caputo Pizzeria (blau, W≈260–280)", def:62, min:58, max:67,
+    hint:"Allrounder, stabil, ideal 8–48 h. Sicher von Hand. Empf. Hydration 58–65 %." },
+  nuvola: { name:"Caputo Nuvola (W≈260–290)", def:68, min:62, max:75,
+    hint:"Für luftigen Canotto-Rand, hohe Hydration. Ideal 24–72 h. Empf. 64–72 %." },
+  cuoco: { name:"Caputo Cuoco / „Cuocco\" (rot, W≈300–320)", def:65, min:60, max:72,
+    hint:"Starkes Mehl (12–15 % Eiweiß), trägt lange Gare locker — top für Biga. Ideal 24–96 h." }
+};
+
+// Smart-Hefe: Hefe% = K / Aktivität; Aktivität = Σ(Std × 2^((T−4)/8)). K geeicht auf 0,30 %@(44h/4°C+4h/21°C).
+const K_YEAST = 18.5;
+const BIGA_HYD = 0.45;          // feste Biga-Hydration
+const BIGA_YEAST_FRESH = 0.006; // 0,6 % Frischhefe auf Biga-Mehl  (≈3 g / 500 g)
+const HAUPT_YEAST_FRESH = 0.001;// 0,1 % Frischhefe auf Gesamtmehl (≈1 g / 1000 g)
+
+let method="direct", basis="pizzas", yeastType="dry";
+
+const $ = id => document.getElementById(id);
+const numIds = ["pizzas","ball","flourGrams","pizzas2","hyd","salt","coldH","coldT","rtH","rtT","rtTb","ddt","flourT"];
+
+function initFlours(){
+  const sel=$("flour");
+  for(const k in FLOURS){ const o=document.createElement("option"); o.value=k; o.textContent=FLOURS[k].name; sel.appendChild(o); }
+}
+function activityDirect(){
+  return (+$("coldH").value)*Math.pow(2,((+$("coldT").value)-4)/8) + (+$("rtH").value)*Math.pow(2,((+$("rtT").value)-4)/8);
+}
+function fmtG(g){
+  if(g>=1000) return (g/1000).toFixed(2).replace(/\.?0+$/,"")+" kg";
+  if(g>=100)  return Math.round(g)+" g";
+  if(g>=10)   return g.toFixed(1)+" g";
+  return g.toFixed(1)+" g";
+}
+function valG(g){
+  let n,u;
+  if(g>=1000){n=(g/1000).toFixed(2);u="kg";}
+  else if(g>=100){n=Math.round(g);u="g";}
+  else if(g>=10){n=g.toFixed(1);u="g";}
+  else {n=g.toFixed(1);u="g";}
+  return `${n} <small>${u}</small>`;
+}
+function yfmt(g){ return (g<10? g.toFixed(g<1?2:1): Math.round(g))+" g"; }
+
+// build one ingredient card
+function card(value,key,sub,accent){
+  return `<div class="item${accent?' accent':''}"><div class="v">${value}</div><div class="k">${key}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`;
+}
+function yeastCards(freshG){
+  const dryG=freshG/3;
+  if(yeastType==="dry") return card(valG(dryG),"Trockenhefe",`≈ ${yfmt(freshG)} frisch`,false);
+  return card(valG(freshG),"Frischhefe",`≈ ${yfmt(dryG)} trocken`,false);
+}
+function setWaterField(g){ if(document.activeElement!==$("waterG")) $("waterG").value=Math.round(g); }
+function applyWaterGrams(){
+  const W=+$("waterG").value;
+  if(!(W>0)){ compute(); return; }
+  const fl=FLOURS[$("flour").value], s=+$("salt").value/100;
+  let h;
+  if(basis==="flour"){ h = W/(+$("flourGrams").value); }
+  else {
+    const y = method==="biga" ? ((0.5*BIGA_YEAST_FRESH)+HAUPT_YEAST_FRESH)
+                              : Math.min(2,Math.max(0.02,K_YEAST/activityDirect()))/100;
+    const T=(+$("pizzas").value)*(+$("ball").value);
+    h = (W<T) ? W*(1+s+y)/(T-W) : (fl.max+5)/100;   // zu viel Wasser → ans Limit
+  }
+  const lo=+$("hyd").min, hi=+$("hyd").max;
+  const pct=Math.max(lo,Math.min(hi,Math.round(h*100)));
+  $("hyd").value=pct; $("hydVal").textContent=pct;
+  compute(); save();   // compute() schreibt das gesnappte Wasser zurück ins Feld
+}
+function waterTemp(){
+  const ddt=+$("ddt").value, flourT=+$("flourT").value;
+  const roomT = method==="biga" ? (+$("rtTb").value) : (+$("rtT").value);
+  let w=3*ddt-flourT-roomT-1, note="";
+  if(w<1){note=" (Eiswasser)"; w=Math.max(1,w);}
+  if(w>38){note=" (Achtung warm)";}
+  return Math.round(w)+" °C"+note;
+}
+
+function compute(){
+  const fl=FLOURS[$("flour").value];
+  const hyd=+$("hyd").value/100, salt=+$("salt").value/100;
+
+  let F, ballsCount, ballW, pizzasN;
+  if(method==="direct"){
+    const yfrac=Math.min(2,Math.max(0.02,K_YEAST/activityDirect()))/100;
+    if(basis==="pizzas"){ pizzasN=+$("pizzas").value; ballW=+$("ball").value; F=pizzasN*ballW/(1+hyd+salt+yfrac); }
+    else { F=+$("flourGrams").value; pizzasN=+$("pizzas2").value; }
+    const water=F*hyd, saltG=F*salt, freshY=F*yfrac, total=F+water+saltG+freshY;
+    if(basis==="pizzas"){ ballsCount=Math.round(total/ballW); } else { ballsCount=pizzasN; ballW=total/pizzasN; }
+    setWaterField(water);
+    renderDirect({F,water,saltG,freshY,total,yfrac,ballsCount,ball:ballW});
+  } else {
+    const yfrac=(0.5*BIGA_YEAST_FRESH)+HAUPT_YEAST_FRESH; // approx total fresh frac of F
+    if(basis==="pizzas"){ pizzasN=+$("pizzas").value; ballW=+$("ball").value; F=pizzasN*ballW/(1+hyd+salt+yfrac); }
+    else { F=+$("flourGrams").value; pizzasN=+$("pizzas2").value; }
+    const bigaFlour=0.5*F, bigaWater=bigaFlour*BIGA_HYD, bigaFresh=bigaFlour*BIGA_YEAST_FRESH;
+    const hauptFlour=F-bigaFlour, totalWater=F*hyd, hauptWater=totalWater-bigaWater;
+    const saltG=F*salt, hauptFresh=F*HAUPT_YEAST_FRESH;
+    const total=F+totalWater+saltG+bigaFresh+hauptFresh;
+    if(basis==="pizzas"){ ballsCount=Math.round(total/ballW); } else { ballsCount=pizzasN; ballW=total/pizzasN; }
+    setWaterField(totalWater);
+    renderBiga({F,bigaFlour,bigaWater,bigaFresh,hauptFlour,hauptWater,saltG,hauptFresh,totalWater,total,ballsCount,ball:ballW});
+  }
+
+  // flour hydration warning
+  const hp=+$("hyd").value, w=$("hydWarn"), nm=fl.name.split(" (")[0];
+  if(hp>fl.max){ w.className="warn show bad"; w.textContent=`⚠ ${hp}% ist hoch für ${nm} (empf. bis ${fl.max}%). Von Hand klebrig — nur mit nassen Händen & Erfahrung.`; }
+  else if(hp<fl.min){ w.className="warn show bad"; w.textContent=`ℹ ${hp}% ist niedrig für dieses Mehl (empf. ab ${fl.min}%). Geht, wird aber weniger luftig.`; }
+  else { w.className="warn show ok"; w.textContent=`✓ ${hp}% passt gut zu ${nm}.`; }
+  $("waterHint").innerHTML = `= <b style="color:var(--txt)">${hp}%</b> · Mehl-Limit ~${fl.max}%`;
+  if(basis==="pizzas"){ const p=+$("pizzas").value, b=+$("ball").value;
+    $("pizzasTotal").innerHTML = `🍕 ${p} Kugeln × ${b} g = <b>${p*b} g</b> Teig gesamt`; }
+  else { $("flourTotal").innerHTML = `🍕 ${pizzasN} Teiglinge à <b>${Math.round(ballW)} g</b> · aus ${Math.round(F)} g Mehl bei ${hp}%`; }
+}
+
+function renderDirect(d){
+  const bw=Math.round(d.ball);
+  $("resTitle").textContent="🧮 Dein Rezept · Direkt 48h";
+  const ing = card(valG(d.F),"Mehl",null,true)+card(valG(d.water),"Wasser (kalt)",null,false)
+            + yeastCards(d.freshY)+card(valG(d.saltG),"Salz",null,false);
+  const balls = `<span class="pill hl">≈ <b>${d.ballsCount}</b> Teiglinge à ${bw} g</span>`;
+  $("resBody").innerHTML =
+    `<div class="ing">${ing}</div>
+     <div class="strip">${balls}
+       <span class="pill">Teig gesamt <b>${fmtG(d.total)}</b></span>
+       <span class="pill">Hefe <b>${(d.yfrac*100).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')} %</b> (frisch)</span>
+       <span class="pill">Hydration <b>${$("hydVal").textContent}%</b></span>
+       <span class="pill hl">💧 Wassertemp <b>${waterTemp()}</b></span>
+     </div>`;
+  const c1=Math.round(d_coldSplit(0)), c2=Math.round(d_coldSplit(1));
+  $("stepsBody").innerHTML = `
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div class="b"><span class="day">Tag 1 · Autolyse</span><br>Mehl + <b>${fmtG(d.water)}</b> Wasser grob vermengen, <b>30 Min</b> abgedeckt ruhen.</div></div>
+      <div class="step"><div class="n">2</div><div class="b"><span class="day">Tag 1 · Hauptteig</span><br>Hefe (<b>${yieldYeast(d.freshY)}</b>) zugeben, einarbeiten. Salz (<b>${fmtG(d.saltG)}</b>) dazu, <b>10–15 Min</b> kneten bis geschmeidig. Teigtemp prüfen → Ziel <b>${$("ddt").value} °C</b>.</div></div>
+      <div class="step"><div class="n">3</div><div class="b"><span class="day">Tag 1 · Stockgare</span><br>Dehnen &amp; falten, Kugel formen, <b>${c1} h</b> im Kühlschrank.</div></div>
+      <div class="step"><div class="n">4</div><div class="b"><span class="day">Tag 2 · Stückgare</span><br>In <b>${d.ballsCount}</b> Teiglinge à <b>${bw} g</b> teilen, auf Spannung schleifen, <b>${c2} h</b> kalt.<br><span style="color:var(--muted);font-size:.82rem">❄️ <b>Kalt verarbeiten</b> — kalter Teig schleift sich straffer &amp; klebt weniger. Nur falls steinhart: 10–15 Min anwärmen, dann formen.</span></div></div>
+      <div class="step"><div class="n">5</div><div class="b"><span class="day">Tag 3 · Backen</span><br>Box <b>${$("rtH").value} h</b> vorher raus (Raumtemp). Ausbreiten, belegen, Ooni ~450–480 °C.<br><span style="color:var(--muted);font-size:.82rem">🌡️ <b>Warm öffnen</b> — erst voll akklimatisiert ausbreiten, sonst zieht sich der Teigling zurück &amp; reißt.</span></div></div>
+    </div>`;
+}
+function d_coldSplit(i){
+  const coldH=+$("coldH").value;
+  const c1 = coldH===44 ? 24 : Math.round(coldH*0.55);
+  return i===0 ? c1 : (coldH-c1);
+}
+function yieldYeast(freshG){ return yeastType==="dry" ? `${yfmt(freshG/3)} trocken` : `${yfmt(freshG)} frisch`; }
+
+function renderBiga(d){
+  const bw=Math.round(d.ball);
+  $("resTitle").textContent="🧮 Dein Rezept · Biga (Vorteig)";
+  const bigaIng = card(valG(d.bigaFlour),"Mehl",null,true)+card(valG(d.bigaWater),"Wasser (kalt)","45 % Hyd.",false)+yeastCards(d.bigaFresh);
+  const hauptIng= card(valG(d.hauptFlour),"Mehl",null,true)+card(valG(d.hauptWater),"Wasser (kalt)",null,false)+card(valG(d.saltG),"Salz",null,false)+yeastCards(d.hauptFresh);
+  const balls = `<span class="pill hl">≈ <b>${d.ballsCount}</b> Teiglinge à ${bw} g</span>`;
+  $("resBody").innerHTML =
+    `<div class="grpttl">🟡 Biga-Vorteig (Tag 1)</div>
+     <div class="ing three">${bigaIng}</div>
+     <div class="grpttl">🔴 Hauptteig (Tag 2)</div>
+     <div class="ing">${hauptIng}</div>
+     <div class="strip">${balls}
+       <span class="pill">Teig gesamt <b>${fmtG(d.total)}</b></span>
+       <span class="pill">Hydration <b>${$("hydVal").textContent}%</b></span>
+       <span class="pill">Biga = <b>50 %</b> des Mehls</span>
+       <span class="pill hl">💧 Wassertemp Hauptteig <b>${waterTemp()}</b></span>
+     </div>`;
+  const reife = $("bigaReife").value==="rt16"
+      ? `<b>16 h bei Raumtemperatur</b> (~${$("rtTb").value} °C) abgedeckt reifen`
+      : `<b>1 h</b> bei Raumtemp anspringen lassen, dann <b>12–16 h im Kühlschrank</b> reifen`;
+  $("stepsBody").innerHTML = `
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div class="b"><span class="day">Tag 1 · Biga ansetzen</span><br><b>${fmtG(d.bigaFlour)}</b> Mehl + <b>${fmtG(d.bigaWater)}</b> kaltes Wasser + Hefe (<b>${yieldYeast(d.bigaFresh)}</b>) grob mit der Hand vermengen zu festem, trockenem Teig. <b>Nicht glatt kneten</b> — darf stückig &amp; krümelig sein. In rustikale Stücke zupfen, in verschlossene Dose.</div></div>
+      <div class="step"><div class="n">2</div><div class="b"><span class="day">Tag 1 · Reife</span><br>Biga ${reife}. Er wird voller Blasen &amp; riecht aromatisch.</div></div>
+      <div class="step"><div class="n">3</div><div class="b"><span class="day">Tag 2 · Autolyse (Hand-Trick)</span><br><b>${fmtG(d.hauptFlour)}</b> Hauptteig-Mehl + ca. <b>90 %</b> vom Hauptteig-Wasser (≈ ${fmtG(d.hauptWater*0.9)}) grob verrühren, <b>30 Min</b> ruhen. Erleichtert das Kneten von Hand.</div></div>
+      <div class="step"><div class="n">4</div><div class="b"><span class="day">Tag 2 · Hauptteig</span><br>Biga in Würfel schneiden, in den Autolyse-Teig geben. Hefe (<b>${yieldYeast(d.hauptFresh)}</b>) im Rest-Wasser lösen, dazu. Kneten und dabei den Biga „<b>brechen</b>", damit er Wasser aufnimmt.</div></div>
+      <div class="step"><div class="n">5</div><div class="b"><span class="day">Tag 2 · Kneten</span><br>Wird der Teig homogen, auf die Arbeitsfläche stürzen. Salz (<b>${fmtG(d.saltG)}</b>) einarbeiten, mit Slap &amp; Fold kneten bis <b>geschmeidig</b> (Fenstertest). Teig nicht über <b>25 °C</b> — Ziel <b>${$("ddt").value} °C</b>. Dann <b>15 Min</b> ruhen.</div></div>
+      <div class="step"><div class="n">6</div><div class="b"><span class="day">Tag 2 · Stückgare</span><br>Zu <b>${d.ballsCount}</b> Teiglingen à <b>${bw} g</b> auf Spannung schleifen. Abgedeckt <b>5–6 h bei Raumtemperatur</b> reifen.<br><span style="color:var(--muted);font-size:.82rem">Mehr Aroma/Flexibilität: Teig vorher am Stück 12–24 h in den Kühlschrank (siehe „An zwei Tagen backen").</span></div></div>
+      <div class="step"><div class="n">7</div><div class="b"><span class="day">Backen</span><br>Teigling abstechen, ausbreiten (Luft in den Rand), belegen, Ooni ~450–480 °C.<br><span style="color:var(--muted);font-size:.82rem">🌡️ <b>Warm öffnen</b> — voll akklimatisiert ausbreiten. (Kommen die Teiglinge aus dem Kühlschrank: ~2–3 h vorher raus.)</span></div></div>
+    </div>`;
+}
+
+function flourChanged(){
+  const fl=FLOURS[$("flour").value];
+  $("flourHint").textContent=fl.hint;
+  $("hyd").min=Math.max(55,fl.min-4); $("hyd").max=Math.min(80,fl.max+5);
+  $("hyd").value=fl.def; $("hydVal").textContent=fl.def;
+  compute();
+}
+
+// ---- toggles ----
+function setSeg(segId,val){
+  document.querySelectorAll(`#${segId} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===val));
+}
+function applyMethod(){
+  $("schedDirect").classList.toggle("hide",method!=="direct");
+  $("schedBiga").classList.toggle("hide",method!=="biga");
+  // biga: default beginner-friendly 65% if currently at flour default & switching
+  setSeg("segMethod",method);
+}
+function applyBasis(){
+  $("basisPizzas").classList.toggle("hide",basis!=="pizzas");
+  $("basisFlour").classList.toggle("hide",basis!=="flour");
+  $("pizzasTotal").classList.toggle("hide",basis!=="pizzas");
+  $("flourTotal").classList.toggle("hide",basis!=="flour");
+  setSeg("segBasis",basis);
+}
+
+function copyRecipe(ev){
+  const t=$("resBody").innerText.replace(/\n{2,}/g,"\n");
+  const head=`🍕 ${$("resTitle").textContent.replace('🧮 ','')}\nMehl: ${FLOURS[$("flour").value].name}\n──────────\n`;
+  const steps="\n\nANLEITUNG:\n"+$("stepsBody").innerText.replace(/\n{2,}/g,"\n");
+  navigator.clipboard.writeText(head+t+steps).then(()=>{
+    const b=ev.target,o=b.textContent; b.textContent="✓ Kopiert!"; setTimeout(()=>b.textContent=o,1400);
+  });
+}
+function setPerfect48(ev){
+  // ideale 48h-Direktführung
+  if(method!=="direct"){ method="direct"; applyMethod(); }
+  $("coldT").value=4;   // langsam & gleichmäßig, stabiles Gluten
+  $("coldH").value=44;  // 24h Stockgare + 20h Stückgare
+  $("rtH").value=4;     // 4h akklimatisieren vor dem Backen
+  $("rtT").value=21;    // angenehme Raumtemperatur
+  $("ddt").value=23;    // ideale Teigtemperatur am Knetende
+  $("flourT").value=21;
+  compute(); save();
+  if(ev&&ev.target){ const b=ev.target,o=b.textContent; b.textContent="✓ Ideal gesetzt!"; setTimeout(()=>b.textContent=o,1400); }
+}
+function resetAll(){
+  method="direct"; basis="pizzas"; yeastType="dry";
+  setSeg("segMethod","direct"); setSeg("segBasis","pizzas"); setSeg("segYeast","dry");
+  applyMethod(); applyBasis();
+  $("flour").value="pizzeria";
+  $("pizzas").value=6; $("ball").value=280; $("pizzas2").value=6; $("flourGrams").value=1000;
+  $("salt").value=3.0; $("saltVal").textContent="3.0";
+  $("coldH").value=44; $("coldT").value=4; $("rtH").value=4; $("rtT").value=21;
+  $("bigaReife").value="rt16"; $("rtTb").value=20;
+  $("ddt").value=23; $("flourT").value=21;
+  flourChanged(); save();
+}
+
+const stateKeys=["method","basis","yeastType","flour","bigaReife",...numIds];
+function save(){
+  const s={method,basis,yeastType,flour:$("flour").value,bigaReife:$("bigaReife").value};
+  numIds.forEach(i=>s[i]=$(i).value);
+  localStorage.setItem("pizzaCalc2",JSON.stringify(s));
+}
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem("pizzaCalc2")); if(!s) return false;
+    method=s.method||"direct"; basis=s.basis||"pizzas"; yeastType=s.yeastType||"dry";
+    if(s.flour) $("flour").value=s.flour;
+    if(s.bigaReife) $("bigaReife").value=s.bigaReife;
+    numIds.forEach(i=>{ if(s[i]!=null) $(i).value=s[i]; });
+    return true;
+  }catch(e){ return false; }
+}
+
+// wire up
+initFlours();
+const loaded=load();
+setSeg("segYeast",yeastType);
+applyMethod(); applyBasis();
+
+$("segMethod").addEventListener("click",e=>{ if(e.target.dataset.v){ method=e.target.dataset.v; applyMethod(); compute(); save(); }});
+$("segBasis").addEventListener("click",e=>{ if(e.target.dataset.v){ basis=e.target.dataset.v; applyBasis(); compute(); save(); }});
+$("segYeast").addEventListener("click",e=>{ if(e.target.dataset.v){ yeastType=e.target.dataset.v; setSeg("segYeast",yeastType); compute(); save(); }});
+$("flour").addEventListener("change",()=>{ flourChanged(); save(); });
+$("hyd").addEventListener("input",()=>{ $("hydVal").textContent=$("hyd").value; compute(); save(); });
+$("salt").addEventListener("input",()=>{ $("saltVal").textContent=(+$("salt").value).toFixed(1); compute(); save(); });
+["pizzas","ball","pizzas2","flourGrams","coldH","coldT","rtH","rtT","rtTb","ddt","flourT"].forEach(i=>
+  $(i).addEventListener("input",()=>{ compute(); save(); }));
+$("bigaReife").addEventListener("change",()=>{ compute(); save(); });
+$("waterG").addEventListener("change",applyWaterGrams);
+
+if(loaded){
+  $("flourHint").textContent=FLOURS[$("flour").value].hint;
+  $("hydVal").textContent=$("hyd").value;
+  $("saltVal").textContent=(+$("salt").value).toFixed(1);
+  compute();
+}else{
+  flourChanged();
+}
+</script>
+</body>
+</html>
