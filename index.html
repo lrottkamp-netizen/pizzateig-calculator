@@ -119,8 +119,9 @@
     <div class="tg">
       <span class="lbl">Methode</span>
       <div class="seg" id="segMethod">
+        <button data-v="d24">Direkt 24h</button>
         <button data-v="direct" class="on">Direkt 48h</button>
-        <button data-v="biga">Biga (Vorteig)</button>
+        <button data-v="biga">Biga</button>
       </div>
     </div>
     <div class="tg">
@@ -222,6 +223,28 @@
         <div class="hint">Ideal: <b>4 °C</b> Kühlschrank · <b>44 h</b> kalt (24 + 20) · <b>4 h</b> Raumtemp (21 °C) · Teigziel <b>23 °C</b>. Bei 4 °C reift es langsam &amp; gleichmäßig, das Gluten bleibt stabil — der „gelingsichere" Korridor.</div>
       </div>
 
+      <!-- 24h room-temp schedule -->
+      <div id="sched24h" class="hide">
+        <div class="row">
+          <div>
+            <label>Stockgare bei Raumtemp (h)</label>
+            <input type="number" id="stockH24" value="14" min="4" max="24" step="1">
+          </div>
+          <div>
+            <label>Stückgare bei Raumtemp (h)</label>
+            <input type="number" id="stueckH24" value="6" min="2" max="12" step="1">
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div>
+            <label>Raumtemperatur (°C)</label>
+            <input type="number" id="rt24T" value="20" min="16" max="30" step="0.5">
+          </div>
+          <div></div>
+        </div>
+        <div class="hint">Komplett bei Raumtemperatur — ideal für spontan (kein Tag Vorlauf). Original Teichners: 12–16 h Stock + 6 h Stück, 0,5 g Frischhefe. Warm reift schnell: bei &gt;22 °C Hefe/Zeit runter. Mehl-Tipp: <b>Caputo Pizzeria</b> ist für 24 h am natürlichsten.</div>
+      </div>
+
       <!-- biga schedule -->
       <div id="schedBiga" class="hide">
         <label>Biga-Reife</label>
@@ -299,9 +322,9 @@
   </details>
 
   <div class="foot">
-    Direkt-Methode: Svens 48-Stunden-Teig · Biga-Methode: „Luftiger geht's nicht" — beide von
+    24h- (Raumtemp), 48h- (kalt) &amp; Biga-Methode — alle von
     <a href="https://www.teichners.de" target="_blank" rel="noopener">Teichners</a>.
-    Smart-Hefe kalibriert auf 0,30 % Frischhefe @ 44 h/4 °C + 4 h/21 °C. Werte sind fundierte Richtwerte — dein Teigthermometer bleibt die Wahrheit. 🍕
+    Smart-Hefe kalibriert auf 0,30 % @ 44 h/4 °C (48h) bzw. 0,10 % @ 20 h/20 °C (24h). Werte sind fundierte Richtwerte — dein Teigthermometer bleibt die Wahrheit. 🍕
   </div>
 </div>
 
@@ -309,11 +332,11 @@
 // ---- Mehl-Profile ---------------------------------------------------------
 const FLOURS = {
   pizzeria: { name:"Caputo Pizzeria (blau, W≈260–280)", def:62, min:58, max:67,
-    hint:"Allrounder, stabil, ideal 8–48 h. Sicher von Hand. Empf. Hydration 58–65 %." },
+    hint:"Allrounder, stabil — DAS Mehl für 24 h, top bis 48 h. Sicher von Hand. Empf. Hydration 58–65 %." },
   nuvola: { name:"Caputo Nuvola (W≈260–290)", def:68, min:62, max:75,
-    hint:"Für luftigen Canotto-Rand, hohe Hydration. Ideal 24–72 h. Empf. 64–72 %." },
+    hint:"Für luftigen Canotto-Rand, hohe Hydration. Ideal 24–72 h (auch 24 h gut). Empf. 64–72 %." },
   cuoco: { name:"Caputo Cuoco / „Cuocco\" (rot, W≈300–320)", def:65, min:60, max:72,
-    hint:"Starkes Mehl (12–15 % Eiweiß), trägt lange Gare locker — top für Biga. Ideal 24–96 h." }
+    hint:"Starkes Mehl (12–15 % Eiweiß) — top für Biga & lange/warme Gare (48–96 h). Bei 24 h ok, glänzt aber länger." }
 };
 
 // Smart-Hefe: Hefe% = K / Aktivität; Aktivität = Σ(Std × 2^((T−4)/8)). K geeicht auf 0,30 %@(44h/4°C+4h/21°C).
@@ -325,7 +348,7 @@ const HAUPT_YEAST_FRESH = 0.001;// 0,1 % Frischhefe auf Gesamtmehl (≈1 g / 100
 let method="direct", basis="pizzas", yeastType="dry";
 
 const $ = id => document.getElementById(id);
-const numIds = ["pizzas","ball","flourGrams","pizzas2","hyd","salt","coldH","coldT","rtH","rtT","rtTb","ddt","flourT"];
+const numIds = ["pizzas","ball","flourGrams","pizzas2","hyd","salt","coldH","coldT","rtH","rtT","rtTb","stockH24","stueckH24","rt24T","ddt","flourT"];
 
 function initFlours(){
   const sel=$("flour");
@@ -333,6 +356,13 @@ function initFlours(){
 }
 function activityDirect(){
   return (+$("coldH").value)*Math.pow(2,((+$("coldT").value)-4)/8) + (+$("rtH").value)*Math.pow(2,((+$("rtT").value)-4)/8);
+}
+// 24h Raumtemp: eigenes Warm-Modell, geeicht auf Teichners 0,10 % Frischhefe @ 20 h / 20 °C
+const K_YEAST24 = 2.0;
+function yeast24frac(){
+  const h=(+$("stockH24").value)+(+$("stueckH24").value), T=+$("rt24T").value;
+  const act=h*Math.pow(2,(T-20)/8);
+  return Math.min(2,Math.max(0.02,K_YEAST24/act))/100;
 }
 function fmtG(g){
   if(g>=1000) return (g/1000).toFixed(2).replace(/\.?0+$/,"")+" kg";
@@ -368,7 +398,8 @@ function applyWaterGrams(){
   if(basis==="flour"){ h = W/(+$("flourGrams").value); }
   else {
     const y = method==="biga" ? ((0.5*BIGA_YEAST_FRESH)+HAUPT_YEAST_FRESH)
-                              : Math.min(2,Math.max(0.02,K_YEAST/activityDirect()))/100;
+            : method==="d24" ? yeast24frac()
+            : Math.min(2,Math.max(0.02,K_YEAST/activityDirect()))/100;
     const T=(+$("pizzas").value)*(+$("ball").value);
     h = (W<T) ? W*(1+s+y)/(T-W) : (fl.max+5)/100;   // zu viel Wasser → ans Limit
   }
@@ -379,7 +410,7 @@ function applyWaterGrams(){
 }
 function waterTemp(){
   const ddt=+$("ddt").value, flourT=+$("flourT").value;
-  const roomT = method==="biga" ? (+$("rtTb").value) : (+$("rtT").value);
+  const roomT = method==="biga" ? (+$("rtTb").value) : method==="d24" ? (+$("rt24T").value) : (+$("rtT").value);
   let w=3*ddt-flourT-roomT-1, note="";
   if(w<1){note=" (Eiswasser)"; w=Math.max(1,w);}
   if(w>38){note=" (Achtung warm)";}
@@ -391,14 +422,15 @@ function compute(){
   const hyd=+$("hyd").value/100, salt=+$("salt").value/100;
 
   let F, ballsCount, ballW, pizzasN;
-  if(method==="direct"){
-    const yfrac=Math.min(2,Math.max(0.02,K_YEAST/activityDirect()))/100;
+  if(method==="direct" || method==="d24"){
+    const yfrac = method==="d24" ? yeast24frac() : Math.min(2,Math.max(0.02,K_YEAST/activityDirect()))/100;
     if(basis==="pizzas"){ pizzasN=+$("pizzas").value; ballW=+$("ball").value; F=pizzasN*ballW/(1+hyd+salt+yfrac); }
     else { F=+$("flourGrams").value; pizzasN=+$("pizzas2").value; }
     const water=F*hyd, saltG=F*salt, freshY=F*yfrac, total=F+water+saltG+freshY;
     if(basis==="pizzas"){ ballsCount=Math.round(total/ballW); } else { ballsCount=pizzasN; ballW=total/pizzasN; }
     setWaterField(water);
-    renderDirect({F,water,saltG,freshY,total,yfrac,ballsCount,ball:ballW});
+    const d={F,water,saltG,freshY,total,yfrac,ballsCount,ball:ballW};
+    if(method==="d24") renderD24(d); else renderDirect(d);
   } else {
     const yfrac=(0.5*BIGA_YEAST_FRESH)+HAUPT_YEAST_FRESH; // approx total fresh frac of F
     if(basis==="pizzas"){ pizzasN=+$("pizzas").value; ballW=+$("ball").value; F=pizzasN*ballW/(1+hyd+salt+yfrac); }
@@ -452,6 +484,31 @@ function d_coldSplit(i){
   const c1 = coldH===44 ? 24 : Math.round(coldH*0.55);
   return i===0 ? c1 : (coldH-c1);
 }
+function renderD24(d){
+  const bw=Math.round(d.ball);
+  $("resTitle").textContent="🧮 Dein Rezept · Direkt 24h (Raumtemp)";
+  const ing = card(valG(d.F),"Mehl",null,true)+card(valG(d.water),"Wasser (kalt)",null,false)
+            + yeastCards(d.freshY)+card(valG(d.saltG),"Salz",null,false);
+  const balls = `<span class="pill hl">≈ <b>${d.ballsCount}</b> Teiglinge à ${bw} g</span>`;
+  $("resBody").innerHTML =
+    `<div class="ing">${ing}</div>
+     <div class="strip">${balls}
+       <span class="pill">Teig gesamt <b>${fmtG(d.total)}</b></span>
+       <span class="pill">Hefe <b>${(d.yfrac*100).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')} %</b> (frisch)</span>
+       <span class="pill">Hydration <b>${$("hydVal").textContent}%</b></span>
+       <span class="pill hl">💧 Wassertemp <b>${waterTemp()}</b></span>
+     </div>`;
+  const stock=+$("stockH24").value, stueck=+$("stueckH24").value, rt=+$("rt24T").value;
+  $("stepsBody").innerHTML = `
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div class="b"><span class="day">Autolyse</span><br>Mehl + <b>90 %</b> des Wassers (≈ ${fmtG(d.water*0.9)}) mit dem Löffel vermengen, abgedeckt <b>30 Min</b> ruhen.</div></div>
+      <div class="step"><div class="n">2</div><div class="b"><span class="day">Hefe einarbeiten</span><br>Hefe (<b>${yieldYeast(d.freshY)}</b>) im Rest-Wasser auflösen, über den Autolyseteig geben und einarbeiten.</div></div>
+      <div class="step"><div class="n">3</div><div class="b"><span class="day">Kneten</span><br>Auf die Arbeitsplatte, Salz (<b>${fmtG(d.saltG)}</b>) einarbeiten, <b>10–15 Min kräftig kneten</b> bis geschmeidig. Teigtemp Ziel <b>${$("ddt").value} °C</b>.</div></div>
+      <div class="step"><div class="n">4</div><div class="b"><span class="day">Stockgare</span><br>Dehnen &amp; falten, auf Spannung schleifen, <b>${stock} h</b> luftdicht bei Raumtemperatur (~${rt} °C).</div></div>
+      <div class="step"><div class="n">5</div><div class="b"><span class="day">Stückgare</span><br>In <b>${d.ballsCount}</b> Teiglinge à <b>${bw} g</b> teilen, von außen in die Mitte ziehen, wenden, auf Spannung schleifen. <b>${stueck} h</b> luftdicht bei Raumtemp.</div></div>
+      <div class="step"><div class="n">6</div><div class="b"><span class="day">Backen</span><br>Teigling abstechen, ausbreiten (Luft in den Rand), belegen, Ooni ~450–480 °C.</div></div>
+    </div>`;
+}
 function yieldYeast(freshG){ return yeastType==="dry" ? `${yfmt(freshG/3)} trocken` : `${yfmt(freshG)} frisch`; }
 
 function renderBiga(d){
@@ -500,8 +557,8 @@ function setSeg(segId,val){
 }
 function applyMethod(){
   $("schedDirect").classList.toggle("hide",method!=="direct");
+  $("sched24h").classList.toggle("hide",method!=="d24");
   $("schedBiga").classList.toggle("hide",method!=="biga");
-  // biga: default beginner-friendly 65% if currently at flour default & switching
   setSeg("segMethod",method);
 }
 function applyBasis(){
@@ -540,6 +597,7 @@ function resetAll(){
   $("pizzas").value=6; $("ball").value=280; $("pizzas2").value=6; $("flourGrams").value=1000;
   $("salt").value=3.0; $("saltVal").textContent="3.0";
   $("coldH").value=44; $("coldT").value=4; $("rtH").value=4; $("rtT").value=21;
+  $("stockH24").value=14; $("stueckH24").value=6; $("rt24T").value=20;
   $("bigaReife").value="rt16"; $("rtTb").value=20;
   $("ddt").value=23; $("flourT").value=21;
   flourChanged(); save();
@@ -574,7 +632,7 @@ $("segYeast").addEventListener("click",e=>{ if(e.target.dataset.v){ yeastType=e.
 $("flour").addEventListener("change",()=>{ flourChanged(); save(); });
 $("hyd").addEventListener("input",()=>{ $("hydVal").textContent=$("hyd").value; compute(); save(); });
 $("salt").addEventListener("input",()=>{ $("saltVal").textContent=(+$("salt").value).toFixed(1); compute(); save(); });
-["pizzas","ball","pizzas2","flourGrams","coldH","coldT","rtH","rtT","rtTb","ddt","flourT"].forEach(i=>
+["pizzas","ball","pizzas2","flourGrams","coldH","coldT","rtH","rtT","rtTb","stockH24","stueckH24","rt24T","ddt","flourT"].forEach(i=>
   $(i).addEventListener("input",()=>{ compute(); save(); }));
 $("bigaReife").addEventListener("change",()=>{ compute(); save(); });
 $("waterG").addEventListener("change",applyWaterGrams);
