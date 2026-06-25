@@ -242,7 +242,8 @@
           </div>
           <div></div>
         </div>
-        <div class="hint">Komplett bei Raumtemperatur — ideal für spontan (kein Tag Vorlauf). Original Teichners: 12–16 h Stock + 6 h Stück, 0,5 g Frischhefe. Warm reift schnell: bei &gt;22 °C Hefe/Zeit runter. Mehl-Tipp: <b>Caputo Pizzeria</b> ist für 24 h am natürlichsten.</div>
+        <div class="hint">Komplett bei Raumtemperatur — ideal für spontan (kein Tag Vorlauf). Original Teichners: 12–16 h Stock + 6 h Stück, 0,5 g Frischhefe. „Raumtemperatur" meint ~18–22 °C. Mehl-Tipp: <b>Caputo Pizzeria</b> ist für 24 h am natürlichsten.</div>
+        <div class="warn" id="warn24"></div>
       </div>
 
       <!-- biga schedule -->
@@ -453,6 +454,15 @@ function compute(){
   if(basis==="pizzas"){ const p=+$("pizzas").value, b=+$("ball").value;
     $("pizzasTotal").innerHTML = `🍕 ${p} Kugeln × ${b} g = <b>${p*b} g</b> Teig gesamt`; }
   else { $("flourTotal").innerHTML = `🍕 ${pizzasN} Teiglinge à <b>${Math.round(ballW)} g</b> · aus ${Math.round(F)} g Mehl bei ${hp}%`; }
+
+  // 24h Hitze-Warnung
+  const w24=$("warn24");
+  if(method==="d24"){
+    const rt=+$("rt24T").value;
+    if(rt>=26){ w24.className="warn show bad"; w24.textContent=`🔥 ${rt} °C ist ZU warm für 12–16 h RT-Gare → Übergare/„verläuft". Heute besser KALT führen (Kühlschrank / 48h-Methode) ODER Bulk auf ~5–7 h kürzen + Eiswasser, nach Aussehen statt Uhr gehen.`; }
+    else if(rt>=23){ w24.className="warn show bad"; w24.textContent=`☀️ ${rt} °C ist warm: Bulk verkürzen (statt 14 h eher 7–9 h, nach Aussehen), kaltes/Eiswasser nutzen, Teig kühl halten.`; }
+    else { w24.className="warn show ok"; w24.textContent=`✓ ${rt} °C passt für die RT-Gare (~18–22 °C ideal).`; }
+  } else { w24.className="warn"; w24.textContent=""; }
 }
 
 function renderDirect(d){
