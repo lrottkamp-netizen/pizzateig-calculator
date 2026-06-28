@@ -138,6 +138,13 @@
         <button data-v="fresh">Frisch</button>
       </div>
     </div>
+    <div class="tg">
+      <span class="lbl">Kneten</span>
+      <div class="seg" id="segKnead">
+        <button data-v="bowl" class="on">In der Schüssel</button>
+        <button data-v="counter">Arbeitsplatte</button>
+      </div>
+    </div>
   </div>
 
   <div class="grid">
@@ -265,11 +272,12 @@
           <input type="number" id="ddt" value="23" min="18" max="26" step="0.5">
         </div>
         <div>
-          <label>Mehl-/Raumtemp (°C)</label>
-          <input type="number" id="flourT" value="21" min="10" max="30" step="0.5">
+          <label>Mehl-/Umgebungstemp (°C)</label>
+          <input type="number" id="flourT" value="21" min="10" max="35" step="0.5">
         </div>
       </div>
-      <div class="hint">Wassertemp wird so berechnet, dass dein Teig am Knetende ~23 °C hat. Über 25 °C bricht das Glutennetz (→ Teig verläuft). Reibung von Hand ~1 °C einkalkuliert.</div>
+      <div class="hint">Wassertemp wird so berechnet, dass dein Teig am Knetende ~23 °C hat. Miss mit dem IR-Gerät die <b>Mehl-/Schüsseltemp</b> (drauf zielen) — Raumtemp grob schätzen reicht. Über 25 °C Teigtemp wird's heikel (Gluten leidet). Reibung je nach Knetmethode: <b>Schüssel = wenig</b>, Arbeitsplatte/Slap&amp;Fold = mehr — der Rechner berücksichtigt das.</div>
+      <div class="warn" id="heatWarn"></div>
     </div>
   </div>
 
@@ -346,7 +354,7 @@ const BIGA_HYD = 0.45;          // feste Biga-Hydration
 const BIGA_YEAST_FRESH = 0.006; // 0,6 % Frischhefe auf Biga-Mehl  (≈3 g / 500 g)
 const HAUPT_YEAST_FRESH = 0.001;// 0,1 % Frischhefe auf Gesamtmehl (≈1 g / 1000 g)
 
-let method="direct", basis="pizzas", yeastType="dry";
+let method="direct", basis="pizzas", yeastType="dry", knead="bowl";
 
 const $ = id => document.getElementById(id);
 const numIds = ["pizzas","ball","flourGrams","pizzas2","hyd","salt","coldH","coldT","rtH","rtT","rtTb","stockH24","stueckH24","rt24T","ddt","flourT"];
@@ -412,7 +420,9 @@ function applyWaterGrams(){
 function waterTemp(){
   const ddt=+$("ddt").value, flourT=+$("flourT").value;
   const roomT = method==="biga" ? (+$("rtTb").value) : method==="d24" ? (+$("rt24T").value) : (+$("rtT").value);
-  let w=3*ddt-flourT-roomT-1, note="";
+  // Reibungswärme: Schüssel/Rubaud = wenig (~0,5 °C), Arbeitsplatte/Slap&Fold & Biga = mehr (~1,5 °C)
+  const friction = (method==="biga" || knead==="counter") ? 1.5 : 0.5;
+  let w=3*ddt-flourT-roomT-friction, note="";
   if(w<1){note=" (Eiswasser)"; w=Math.max(1,w);}
   if(w>38){note=" (Achtung warm)";}
   return Math.round(w)+" °C"+note;
@@ -463,8 +473,32 @@ function compute(){
     else if(rt>=23){ w24.className="warn show bad"; w24.textContent=`☀️ ${rt} °C ist warm: Bulk verkürzen (statt 14 h eher 7–9 h, nach Aussehen), kaltes/Eiswasser nutzen, Teig kühl halten.`; }
     else { w24.className="warn show ok"; w24.textContent=`✓ ${rt} °C passt für die RT-Gare (~18–22 °C ideal).`; }
   } else { w24.className="warn"; w24.textContent=""; }
+
+  // Hitze-Hinweis für die Kalt-Methoden (Sommer): die WARME Endphase läuft dann schnell
+  const hw=$("heatWarn");
+  if(method==="d24"){ hw.className="warn"; hw.textContent=""; } // d24 hat eigene Warnung oben
+  else {
+    const amb = method==="biga" ? +$("rtTb").value : +$("rtT").value;
+    if(amb>=28){ hw.className="warn show bad"; hw.textContent=`🔥 ${amb} °C ist heiß: Eis-/Kaltwasser nutzen. Die Warmgare am Ende läuft dann deutlich schneller → nach AUSSEHEN backen (nicht Uhr) und den Kühlschrank als Pause-Taste nutzen, sobald die Teiglinge gewölbt sind.`; }
+    else if(amb>=25){ hw.className="warn show bad"; hw.textContent=`☀️ ${amb} °C ist warm: kühleres Wasser, Warmgare nach Aussehen statt Uhr, bei zu früher Reife Teiglinge zurück in den Kühlschrank.`; }
+    else { hw.className="warn"; hw.textContent=""; }
+  }
 }
 
+// Knet-Anweisung je nach gewählter Methode (Salz wird hier eingearbeitet)
+function kneadStep(saltG){
+  const ziel=$("ddt").value;
+  if(knead==="bowl"){
+    return `Salz (<b>${fmtG(saltG)}</b>) zugeben. <b>In der Schüssel kneten (Rubaud):</b> mit nasser Hand unter den Teig greifen, hochziehen &amp; einklappen — kleine, zügige Zieh-Bewegungen, ~<b>15 Min</b> (mit Mini-Pausen), bis der Teig <b>weich &amp; geschmeidig</b> ist. Kein Mehl-Chaos, nimmt kaum Wärme auf. Teigtemp-Ziel <b>${ziel} °C</b>.`;
+  }
+  return `Auf die Arbeitsplatte, Salz (<b>${fmtG(saltG)}</b>) einarbeiten, <b>10–15 Min</b> kneten (Slap &amp; Fold) bis geschmeidig. Teigtemp-Ziel <b>${ziel} °C</b>.`;
+}
+// Stabilitäts-Zusatz für den weichen Schüssel-Teig
+function foldNote(){
+  return knead==="bowl"
+    ? `In der <b>ersten Stunde 2–3× Dehnen &amp; Falten</b> (gibt dem weichen Schüssel-Teig Stand), dann `
+    : `Dehnen &amp; falten, `;
+}
 function renderDirect(d){
   const bw=Math.round(d.ball);
   $("resTitle").textContent="🧮 Dein Rezept · Direkt 48h";
@@ -483,8 +517,8 @@ function renderDirect(d){
   $("stepsBody").innerHTML = `
     <div class="steps">
       <div class="step"><div class="n">1</div><div class="b"><span class="day">Tag 1 · Autolyse</span><br>Mehl + <b>${fmtG(d.water)}</b> Wasser grob vermengen, <b>30 Min</b> abgedeckt ruhen.</div></div>
-      <div class="step"><div class="n">2</div><div class="b"><span class="day">Tag 1 · Hauptteig</span><br>Hefe (<b>${yieldYeast(d.freshY)}</b>) zugeben, einarbeiten. Salz (<b>${fmtG(d.saltG)}</b>) dazu, <b>10–15 Min</b> kneten bis geschmeidig. Teigtemp prüfen → Ziel <b>${$("ddt").value} °C</b>.</div></div>
-      <div class="step"><div class="n">3</div><div class="b"><span class="day">Tag 1 · Stockgare</span><br>Dehnen &amp; falten, Kugel formen, <b>${c1} h</b> im Kühlschrank.</div></div>
+      <div class="step"><div class="n">2</div><div class="b"><span class="day">Tag 1 · Hauptteig</span><br>Hefe (<b>${yieldYeast(d.freshY)}</b>) zugeben, einarbeiten. ${kneadStep(d.saltG)}</div></div>
+      <div class="step"><div class="n">3</div><div class="b"><span class="day">Tag 1 · Stockgare</span><br>${foldNote()}Kugel formen, <b>${c1} h</b> im Kühlschrank.</div></div>
       <div class="step"><div class="n">4</div><div class="b"><span class="day">Tag 2 · Stückgare</span><br>In <b>${d.ballsCount}</b> Teiglinge à <b>${bw} g</b> teilen, auf Spannung schleifen, <b>${c2} h</b> kalt.<br><span style="color:var(--muted);font-size:.82rem">❄️ <b>Kalt verarbeiten</b> — kalter Teig schleift sich straffer &amp; klebt weniger. Nur falls steinhart: 10–15 Min anwärmen, dann formen.</span></div></div>
       <div class="step"><div class="n">5</div><div class="b"><span class="day">Tag 3 · Backen</span><br>Box <b>${$("rtH").value} h</b> vorher raus (Raumtemp). Ausbreiten, belegen, Ooni ~450–480 °C.<br><span style="color:var(--muted);font-size:.82rem">🌡️ <b>Warm öffnen</b> — erst voll akklimatisiert ausbreiten, sonst zieht sich der Teigling zurück &amp; reißt.</span></div></div>
     </div>`;
@@ -513,8 +547,8 @@ function renderD24(d){
     <div class="steps">
       <div class="step"><div class="n">1</div><div class="b"><span class="day">Autolyse</span><br>Mehl + <b>90 %</b> des Wassers (≈ ${fmtG(d.water*0.9)}) mit dem Löffel vermengen, abgedeckt <b>30 Min</b> ruhen.</div></div>
       <div class="step"><div class="n">2</div><div class="b"><span class="day">Hefe einarbeiten</span><br>Hefe (<b>${yieldYeast(d.freshY)}</b>) im Rest-Wasser auflösen, über den Autolyseteig geben und einarbeiten.</div></div>
-      <div class="step"><div class="n">3</div><div class="b"><span class="day">Kneten</span><br>Auf die Arbeitsplatte, Salz (<b>${fmtG(d.saltG)}</b>) einarbeiten, <b>10–15 Min kräftig kneten</b> bis geschmeidig. Teigtemp Ziel <b>${$("ddt").value} °C</b>.</div></div>
-      <div class="step"><div class="n">4</div><div class="b"><span class="day">Stockgare</span><br>Dehnen &amp; falten, auf Spannung schleifen, <b>${stock} h</b> luftdicht bei Raumtemperatur (~${rt} °C).</div></div>
+      <div class="step"><div class="n">3</div><div class="b"><span class="day">Kneten</span><br>${kneadStep(d.saltG)}</div></div>
+      <div class="step"><div class="n">4</div><div class="b"><span class="day">Stockgare</span><br>${foldNote()}auf Spannung schleifen, <b>${stock} h</b> luftdicht bei Raumtemperatur (~${rt} °C).</div></div>
       <div class="step"><div class="n">5</div><div class="b"><span class="day">Stückgare</span><br>In <b>${d.ballsCount}</b> Teiglinge à <b>${bw} g</b> teilen, von außen in die Mitte ziehen, wenden, auf Spannung schleifen. <b>${stueck} h</b> luftdicht bei Raumtemp.</div></div>
       <div class="step"><div class="n">6</div><div class="b"><span class="day">Backen</span><br>Teigling abstechen, ausbreiten (Luft in den Rand), belegen, Ooni ~450–480 °C.</div></div>
     </div>`;
@@ -600,8 +634,8 @@ function setPerfect48(ev){
   if(ev&&ev.target){ const b=ev.target,o=b.textContent; b.textContent="✓ Ideal gesetzt!"; setTimeout(()=>b.textContent=o,1400); }
 }
 function resetAll(){
-  method="direct"; basis="pizzas"; yeastType="dry";
-  setSeg("segMethod","direct"); setSeg("segBasis","pizzas"); setSeg("segYeast","dry");
+  method="direct"; basis="pizzas"; yeastType="dry"; knead="bowl";
+  setSeg("segMethod","direct"); setSeg("segBasis","pizzas"); setSeg("segYeast","dry"); setSeg("segKnead","bowl");
   applyMethod(); applyBasis();
   $("flour").value="pizzeria";
   $("pizzas").value=6; $("ball").value=280; $("pizzas2").value=6; $("flourGrams").value=1000;
@@ -615,14 +649,14 @@ function resetAll(){
 
 const stateKeys=["method","basis","yeastType","flour","bigaReife",...numIds];
 function save(){
-  const s={method,basis,yeastType,flour:$("flour").value,bigaReife:$("bigaReife").value};
+  const s={method,basis,yeastType,knead,flour:$("flour").value,bigaReife:$("bigaReife").value};
   numIds.forEach(i=>s[i]=$(i).value);
   localStorage.setItem("pizzaCalc2",JSON.stringify(s));
 }
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem("pizzaCalc2")); if(!s) return false;
-    method=s.method||"direct"; basis=s.basis||"pizzas"; yeastType=s.yeastType||"dry";
+    method=s.method||"direct"; basis=s.basis||"pizzas"; yeastType=s.yeastType||"dry"; knead=s.knead||"bowl";
     if(s.flour) $("flour").value=s.flour;
     if(s.bigaReife) $("bigaReife").value=s.bigaReife;
     numIds.forEach(i=>{ if(s[i]!=null) $(i).value=s[i]; });
@@ -634,11 +668,13 @@ function load(){
 initFlours();
 const loaded=load();
 setSeg("segYeast",yeastType);
+setSeg("segKnead",knead);
 applyMethod(); applyBasis();
 
 $("segMethod").addEventListener("click",e=>{ if(e.target.dataset.v){ method=e.target.dataset.v; applyMethod(); compute(); save(); }});
 $("segBasis").addEventListener("click",e=>{ if(e.target.dataset.v){ basis=e.target.dataset.v; applyBasis(); compute(); save(); }});
 $("segYeast").addEventListener("click",e=>{ if(e.target.dataset.v){ yeastType=e.target.dataset.v; setSeg("segYeast",yeastType); compute(); save(); }});
+$("segKnead").addEventListener("click",e=>{ if(e.target.dataset.v){ knead=e.target.dataset.v; setSeg("segKnead",knead); compute(); save(); }});
 $("flour").addEventListener("change",()=>{ flourChanged(); save(); });
 $("hyd").addEventListener("input",()=>{ $("hydVal").textContent=$("hyd").value; compute(); save(); });
 $("salt").addEventListener("input",()=>{ $("saltVal").textContent=(+$("salt").value).toFixed(1); compute(); save(); });
