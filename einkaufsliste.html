@@ -27,6 +27,7 @@
   .card h2 span{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
   .plan{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.84rem}
   .plan b{color:var(--gold)}
+  .plan a{color:var(--txt);text-decoration:none;border-bottom:1px dotted var(--muted)}
   .grp{font-size:.74rem;color:var(--gold);font-weight:700;margin:10px 0 2px}
   .li{display:flex;gap:10px;align-items:center;padding:8px 4px;border-top:1px solid var(--line);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
   .grp + .li{border-top:none}
@@ -40,23 +41,28 @@
   .li.done .nm,.li.done .pk{opacity:.4;text-decoration:line-through}
   .hint{font-size:.74rem;color:var(--muted);margin-top:8px}
   button{display:block;margin:16px auto 0;background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:8px 16px;border-radius:9px;font-size:.84rem;cursor:pointer}
+  .tabs{display:flex;gap:4px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px;margin:12px 0 0}
+  .tabs a{flex:1;text-align:center;padding:8px 6px;border-radius:999px;font-size:.82rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .tabs a.on{background:var(--accent);color:#fff}
+  .hint b{color:var(--txt)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <a class="back" href="meal-prep.html">← Meal Prep Frühstück</a>
   <h1>🛒 Einkaufs<span class="em">liste</span></h1>
-  <div class="sub">6 Tage Frühstück · 2 Prep-Runden · je 1 Glas pro Tag</div>
+  <div class="sub">6 Tage Frühstück · 2 Prep-Runden · Produkte von REWE</div>
+  <nav class="tabs"><a href="meal-prep.html">📋 Plan &amp; Prep</a><a href="rezepte.html">📖 Rezepte</a><a href="einkaufsliste.html" class="on">🛒 Einkauf</a></nav>
 
   <div class="card">
     <h2>📅 Plan</h2>
     <div class="plan">
-      <b>Mo</b><span>Choc Banana Bread Oats</span>
-      <b>Di</b><span>Lemon Berry Pot</span>
-      <b>Mi</b><span>Lemon Berry Pot</span>
-      <b>Do</b><span>Bueno Overnight Oats</span>
-      <b>Fr</b><span>Cookie Dough Oats</span>
-      <b>Sa</b><span>Schoko Overnight Oats</span>
+      <b>Mo</b><a href="rezepte.html#banana">Choc Banana Bread Oats</a>
+      <b>Di</b><a href="rezepte.html#lemon">Lemon Berry Pot</a>
+      <b>Mi</b><a href="rezepte.html#lemon">Lemon Berry Pot</a>
+      <b>Do</b><a href="rezepte.html#bueno">Bueno Overnight Oats</a>
+      <b>Fr</b><a href="rezepte.html#cookie">Cookie Dough Oats</a>
+      <b>Sa</b><a href="rezepte.html#schoko">Schoko Overnight Oats</a>
     </div>
     <div class="hint">Runde 1 (Mo–Mi) am Sonntag preppen, Runde 2 (Do–Sa) am Mittwochabend. Lemon-Kuchen als halbes Rezept (2 Pots).</div>
   </div>
@@ -72,9 +78,12 @@
   </div>
 
   <div class="card">
-    <h2>🏠 Vorrat prüfen <span id="c3"></span></h2>
+    <h2>🏠 Zuhause <span id="c3"></span></h2>
     <div id="l3"></div>
   </div>
+
+  <div class="card"><h2>💶 Kosten (REWE)</h2><div class="hint" id="sum" style="margin-top:0"></div>
+    <div class="hint">🥥 <b>Kokosöl</b> brauchst du nicht – es macht nur die Bueno-Schokodecke etwas weicher. Ohne wird sie knackiger.</div></div>
 
   <button id="reset">↺ Haken zurücksetzen</button>
   <div class="hint" style="text-align:center">Bananenbrot und Mittags-Skyr stehen auf der großen Liste unter Meal Prep.</div>
@@ -83,49 +92,49 @@
 <script>
 const KEY="einkaufslisteFruehstueck6";
 // [id, Gruppe, Name, Packung, exakte Menge]
+// [id, Gruppe, Produkt bei REWE, Packung, exakte Menge, Preis € (zuletzt gemeldet, je nach Markt) | null]
 const LISTS={
   l1:[
-    ["ban","🍌 Obst","Banane, reif","1 Stück","Banana Bread Oats"],
-    ["zit","🍌 Obst","Bio-Zitrone","1 Stück","Lemon Pots"],
-    ["blau","🍌 Obst","Blaubeeren","1 × 125-g-Schale","80 g"],
-    ["him","❄️ Tiefkühl","Himbeeren TK","1 × 300-g-Beutel","160 g · Jam + Schoko Oats"],
-    ["skyr1","🥛 Kühlregal","Skyr natur","1 × 450-g-Becher","315 g · Runde 1"],
-    ["milch","🥛 Kühlregal","Milch (H-Milch hält bis Mi)","1 × 1-l-Packung","480 ml"],
-    ["ei","🥛 Kühlregal","Eier","1 × 6er-Packung","1 Stück"],
-    ["hafer","🌾 Vorrat","Haferflocken, zart","1 × 500-g-Packung","275 g"],
-    ["chia","🌾 Vorrat","Chiasamen","1 × 200-g-Beutel","42 g"],
-    ["wal","🌾 Vorrat","Walnüsse","1 × 100-g-Beutel","10 g"],
-    ["hasel","🌾 Vorrat","Haselnüsse, gemahlen","1 × 100-g-Packung","1 EL"],
-    ["emus","🌾 Vorrat","Erdnussmus","1 Glas","15 g"],
-    ["hmus","🌾 Vorrat","Haselnussmus","1 Glas","15 g"],
-    ["wv","🌾 Vorrat","Whey Vanille","1 Beutel/Dose","25 g"],
-    ["ws","🌾 Vorrat","Whey Stracciatella","1 Beutel/Dose","25 g"],
-    ["zb","🍫 Süßes","Zartbitterschokolade","1 × 100-g-Tafel","70 g · gehackt statt Drops"],
-    ["bueno","🍫 Süßes","Kinder Bueno","1 Packung (2 Riegel)","1 Stück"]
+    ["ban","🍌 Obst","Banane, reif","1 Stück","Banana Bread Oats",null],
+    ["zit","🍌 Obst","Bio-Zitrone","1 Stück","Lemon Pots",null],
+    ["blau","🍌 Obst","Heidelbeeren (REWE Bio)","1 × 125-g-Schale","80 g",2.89],
+    ["him","❄️ Tiefkühl","REWE Bio Himbeeren TK","1 × 300-g-Beutel","160 g · Jam + Schoko Oats",3.19],
+    ["skyr1","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","315 g · Runde 1",1.29],
+    ["milch","🥛 Kühlregal","ja! H-Milch 1,5 %","1 × 1-l-Packung","480 ml",0.85],
+    ["ei","🥛 Kühlregal","Eier","1 × 6er-Packung","1 Stück",null],
+    ["hafer","🌾 Vorrat","ja! Zarte Haferflocken","1 × 500-g-Packung","275 g",0.69],
+    ["chia","🌾 Vorrat","REWE Bio Chia-Samen","1 × 300-g-Beutel","42 g",1.85],
+    ["hmus","🌾 Vorrat","REWE Bio Haselnussmus","1 × 250-g-Glas","15 g · Bueno",null],
+    ["wal","🌾 Vorrat","ja! Walnusskerne <small>optional</small>","1 × 200-g-Beutel","10 g",2.49],
+    ["hasel","🌾 Vorrat","ja! Haselnusskerne gemahlen <small>optional</small>","1 × 200-g-Packung","1 EL",2.99],
+    ["zb","🍫 Süßes","ja! Zartbitter-Schokolade","1 × 100-g-Tafel","70 g",0.89],
+    ["bueno","🍫 Süßes","Kinder Bueno","1 × 43 g (2 Riegel)","1 Stück",null]
   ],
   l2:[
-    ["skyr2","🥛 Kühlregal","Skyr natur","1 × 450-g-Becher","230 g · Runde 2"],
-    ["erd","🍌 Obst","Erdbeeren","1 × 250-g-Schale","60 g · Cookie Dough"]
+    ["skyr2","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","230 g · Runde 2",1.29],
+    ["erd","🍌 Obst","Erdbeeren","1 × 250-g-Schale","60 g · Cookie Dough",2.99]
   ],
   l3:[
-    ["kak","","Backkakao","—","10 g"],
-    ["hon","","Honig (oder Agavendicksaft)","—","~70 g"],
-    ["zimt","","Zimt","—","½ TL"],
-    ["bp","","Backpulver","—","½ TL"],
-    ["kok","","Kokosöl","—","⅓ TL"],
-    ["van","","Vanille + Salz","—","je 1 Prise"]
+    ["emus","✅ Hast du schon","Erdnussmus","—","15 g",null],
+    ["prot","✅ Hast du schon","Proteinpulver","—","50 g (Cookie Dough + Schoko)",null],
+    ["kak","🏠 Prüfen","Backkakao","—","10 g",null],
+    ["hon","🏠 Prüfen","Honig (oder Agavendicksaft)","—","~70 g",null],
+    ["zimt","🏠 Prüfen","Zimt","—","½ TL",null],
+    ["bp","🏠 Prüfen","Backpulver","—","½ TL",null],
+    ["van","🏠 Prüfen","Vanille + Salz","—","je 1 Prise",null]
   ]
 };
+const eur=v=>v.toFixed(2).replace(".",",")+" €";
 let checked={};
 try{ checked=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(checked)); }catch(e){} }
 function render(){
   ["l1","l2","l3"].forEach((l,i)=>{
     let h="", last=null, done=0;
-    for(const [id,g,nm,pk,ex] of LISTS[l]){
+    for(const [id,g,nm,pk,ex,pr] of LISTS[l]){
       if(g && g!==last){ h+=`<div class="grp">${g}</div>`; last=g; }
       const on=!!checked[id]; if(on) done++;
-      h+=`<div class="li${on?" done":""}" data-id="${id}"><span class="box"></span><span class="nm">${nm}</span><span class="pk">${pk==="—"?ex:pk}${pk==="—"?"":`<small>(${ex})</small>`}</span></div>`;
+      h+=`<div class="li${on?" done":""}" data-id="${id}"><span class="box"></span><span class="nm">${nm}${pr?`<br><small>≈ ${eur(pr)}</small>`:""}</span><span class="pk">${pk==="—"?ex:pk}${pk==="—"?"":`<small>(${ex})</small>`}</span></div>`;
     }
     document.getElementById(l).innerHTML=h;
     document.getElementById("c"+(i+1)).textContent=`${done}/${LISTS[l].length}`;
@@ -138,6 +147,8 @@ document.addEventListener("click",e=>{
 });
 document.getElementById("reset").addEventListener("click",()=>{ checked={}; save(); render(); });
 render();
+const all=[...LISTS.l1,...LISTS.l2], sum=all.reduce((a,i)=>a+(i[5]||0),0), opt=all.filter(i=>i[2].includes("optional")).reduce((a,i)=>a+(i[5]||0),0);
+document.getElementById("sum").innerHTML=`Grob <b>≈ ${eur(sum)}</b> für die Positionen mit Preis, ohne die optionalen Nüsse <b>≈ ${eur(sum-opt)}</b>. Dazu Banane, Zitrone, Eier, Haselnussmus und Bueno. Preise: zuletzt gemeldete REWE-Preise, je nach Markt anders.`;
 </script>
 </body>
 </html>

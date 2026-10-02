@@ -121,6 +121,10 @@
   .rc .how{font-size:.82rem}
   .keep{font-size:.78rem;margin-top:10px;padding:8px 10px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
   .keep b{color:var(--txt)}
+  /* Tabs */
+  .tabs{display:flex;gap:4px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px;margin:14px auto 0;max-width:420px}
+  .tabs a{flex:1;text-align:center;padding:8px 6px;border-radius:999px;font-size:.82rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .tabs a.on{background:var(--accent);color:#fff}
 </style>
 </head>
 <body>
@@ -128,7 +132,8 @@
   <header>
     <a class="back" href="index.html">← Pizzateig-Calculator</a>
     <h1>🥣 Meal Prep <span class="em">Frühstück</span></h1>
-    <div class="sub">Schoko Overnight Oats + Marmor-Bananenbrot · einmal Sonntag preppen</div>
+    <div class="sub">Overnight Oats + Marmor-Bananenbrot · Sonntag preppen</div>
+    <nav class="tabs"><a href="meal-prep.html" class="on">📋 Plan &amp; Prep</a><a href="rezepte.html">📖 Rezepte</a><a href="einkaufsliste.html">🛒 Einkauf</a></nav>
   </header>
 
   <div class="toggles">
@@ -196,7 +201,7 @@
   <!-- WEITERE REZEPTE -->
   <div class="card" id="mehr">
     <h2>🔁 Abwechslung: 2 Prep-Runden à 3 Tage</h2>
-    <p class="how" style="margin:0 0 10px"><a href="einkaufsliste.html" style="color:var(--accent2);font-weight:600">🛒 Kleine Einkaufsliste für diese 6 Tage →</a></p>
+    <p class="how" style="margin:0 0 10px"><a href="rezepte.html" style="color:var(--accent2);font-weight:600">📖 Alle Rezepte mit Bild &amp; Anleitung →</a> · <a href="einkaufsliste.html" style="color:var(--accent2);font-weight:600">🛒 Einkaufsliste 6 Tage →</a></p>
     <p class="how" style="margin-top:0">Statt 5× dasselbe Glas: <b>zwei kleine Prep-Runden</b>. Dann ist nichts älter als 3 Tage – das löst auch das Haltbarkeitsproblem von Tag 5.</p>
     <div class="blk">
       <div><b class="h">🔴 Tag 1–3 (Sonntag preppen)</b>
@@ -209,67 +214,6 @@
     <p class="hint" style="margin-top:10px">Bei „nachgebaut" verschickt die Erstellerin das Rezept nur per DM. Die Mengen hier sind aus Video-Bild, Beschreibung und ihrem Grundrezept (Schoko Oats) abgeleitet – schmeckt, ist aber nicht 1:1 ihr Original.</p>
   </div>
 
-  <div class="card">
-    <div class="rc">
-      <a href="https://www.instagram.com/reel/DbvKN5nM45R/" target="_blank" rel="noopener"><img src="img/banana-bread-oats.jpg" alt="Choc Banana Bread Oats" loading="lazy"></a>
-      <div>
-        <h2 style="margin-bottom:0">Choc Banana Bread Oats</h2>
-        <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/DbvKN5nM45R/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
-        <span class="tag a">Tag 1–3 · Sonntag preppen</span><span class="tag n">≈ nachgebaut – Original nur per DM</span>
-      </div>
-    </div>
-    <div class="rc" style="display:block">
-      <div class="rec"><div class="rec"><div class="q">45 g</div><div>zarte Haferflocken</div><div class="q">10 g</div><div>Chiasamen</div><div class="q">5 g</div><div>Backkakao</div><div class="q">½ TL</div><div>Zimt</div><div class="q">½</div><div>reife Banane, zerdrückt (ersetzt den Honig)</div><div class="q">50 g</div><div>Skyr</div><div class="q">100 ml</div><div>Milch</div><div class="q">½</div><div>Banane in Scheiben, mit Zimt kurz in der Pfanne karamellisiert</div><div class="q">Topping</div><div>40 g Skyr, 10 g Zartbitter gehackt, ein paar Walnüsse</div></div></div>
-      <p class="how">Bananenscheiben in einer beschichteten Pfanne mit etwas Zimt 1–2 min pro Seite karamellisieren, abkühlen lassen und an die Glaswand drücken. Restliche Zutaten verrühren, einfüllen, Kühlschrank. Laut Reel ≈ <b>22 g Protein, 11 g Ballaststoffe</b> pro Glas. Mit 25 g Whey (+40 ml Milch) deutlich mehr.</p>
-      <div class="keep">🧊 <b>Max. 3 Tage.</b> Die Bananenscheiben werden danach dunkel und weich → Runde 1.</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="rc">
-      <a href="https://www.instagram.com/reel/DYwRscRMKdi/" target="_blank" rel="noopener"><img src="img/lemon-berry-pots.jpg" alt="Lemon Berry Breakfast-Cake-Pots" loading="lazy"></a>
-      <div>
-        <h2 style="margin-bottom:0">Lemon Berry Breakfast-Cake-Pots</h2>
-        <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/DYwRscRMKdi/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
-        <span class="tag a">Tag 1–3 · Sonntag preppen</span><span class="tag n">≈ nachgebaut – Original nur per DM</span>
-      </div>
-    </div>
-    <div class="rc" style="display:block">
-      <div class="rec"><div class="rec"><div class="q"></div><div><b>Zitronen-Hafer-Kuchen</b> (Blech/Form, reicht für 4 Pots):</div><div class="q">160 g</div><div>Haferflocken, gemahlen</div><div class="q">2</div><div>Eier</div><div class="q">150 g</div><div>Skyr</div><div class="q">30 g</div><div>Honig</div><div class="q">1</div><div>Bio-Zitrone: Abrieb + 2 EL Saft</div><div class="q">1 TL</div><div>Backpulver</div><div class="q">80 g</div><div>Blaubeeren</div><div class="q"></div><div><b>Himbeer-Chia-Jam:</b> 200 g TK-Himbeeren aufkochen, 1 EL Chia + 1 TL Honig einrühren, 10 min quellen</div><div class="q"></div><div><b>Schicht-Creme:</b> 300 g Skyr + Zitronenabrieb + 1 EL Honig</div><div class="q">Topping</div><div>Blaubeeren</div></div></div>
-      <p class="how">Kuchenteig verrühren, in eine kleine Form, <b>180 °C ca. 20–25 min</b> backen, abkühlen, in Stücke brechen. Im Glas schichten: Kuchen → Jam → Zitronen-Skyr → Kuchen → Jam → Skyr → Blaubeeren. Passt prima neben das Bananenbrot in den Ofen.</p>
-      <div class="keep">🧊 <b>Geschichtet max. 3 Tage</b>, danach weicht der Kuchen durch. Tipp: Kuchen &amp; Jam halten getrennt 5 Tage – dann nur Schichten am Mittwoch.</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="rc">
-      <a href="https://www.instagram.com/reel/DceOJSCsuks/" target="_blank" rel="noopener"><img src="img/bueno-oats.jpg" alt="Bueno Overnight Oats" loading="lazy"></a>
-      <div>
-        <h2 style="margin-bottom:0">Bueno Overnight Oats</h2>
-        <div class="src">von <b>marenmorereal</b> · <a href="https://www.instagram.com/reel/DceOJSCsuks/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
-        <span class="tag b">Tag 4–6 · Mittwochabend preppen</span><span class="tag o">✓ Originalrezept</span>
-      </div>
-    </div>
-    <div class="rc" style="display:block">
-      <div class="rec"><div class="rec"><div class="q">60 g</div><div>Hafermehl (oder zarte Haferflocken, fein gemixt)</div><div class="q">½ EL</div><div>Chiasamen</div><div class="q">1 EL</div><div>gemahlene Haselnüsse</div><div class="q">1–1½ EL</div><div>Agavendicksaft</div><div class="q">50 g</div><div>Joghurt nach Wahl (→ Skyr für mehr Protein)</div><div class="q">nach Gefühl</div><div>Milch (ca. 100 ml)</div><div class="q">optional</div><div>1 EL Proteinpulver</div><div class="q">Topping</div><div>1 EL Haselnussmus, Schokolade geschmolzen + ⅓ TL Kokosöl, 1 Stück Kinder Bueno</div></div></div>
-      <p class="how">Alle Basiszutaten verrühren, ins Glas. Mit Haselnussmus bestreichen, geschmolzene Schokolade mit Kokosöl drübergießen (wird im Kühlschrank zur knackigen Decke), ein Stück Bueno drauf. Mindestens 1 h, besser über Nacht ziehen lassen. Original kostet <b>unter 2 €</b> pro Portion.</p>
-      <div class="keep">🧊 <b>3–4 Tage.</b> Kein frisches Obst, die Schokodecke versiegelt das Glas → ideal für Runde 2. Protein ohne Skyr/Whey eher niedrig (~12 g).</div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="rc">
-      <a href="https://www.instagram.com/reel/Dcskhzxs3Ms/" target="_blank" rel="noopener"><img src="img/cookie-dough-oats.jpg" alt="Cookie Dough Overnight Oats" loading="lazy"></a>
-      <div>
-        <h2 style="margin-bottom:0">Cookie Dough Overnight Oats</h2>
-        <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/Dcskhzxs3Ms/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
-        <span class="tag b">Tag 4–6 · Mittwochabend preppen</span><span class="tag n">≈ nachgebaut – Original nur per DM</span>
-      </div>
-    </div>
-    <div class="rc" style="display:block">
-      <div class="rec"><div class="rec"><div class="q">45 g</div><div>zarte Haferflocken</div><div class="q">10 g</div><div>Chiasamen</div><div class="q">25 g</div><div>Whey Vanille</div><div class="q">15 g</div><div>Erdnussmus</div><div class="q">1 Prise</div><div>Salz + etwas Vanille</div><div class="q">50 g</div><div>Skyr</div><div class="q">10 g</div><div>Honig oder Ahornsirup</div><div class="q">140 ml</div><div>Milch</div><div class="q">10 g</div><div>Schoko-Drops, untergerührt</div><div class="q">Topping</div><div>40 g Skyr, 60 g Erdbeeren, 10 g Zartbitter gehackt – erst morgens</div></div></div>
-      <p class="how">Alles außer Topping verrühren, Schoko-Drops unterheben, ins Glas, Kühlschrank. Morgens Skyr, Erdbeeren und Schokolade drauf. Laut Reel <b>≈ 28 g Protein</b> (sie nutzt Proteinpulver + Erdnussmus).</p>
-      <div class="keep">🧊 <b>3–4 Tage.</b> Erdbeeren erst morgens dazu, dann hält die Basis gut → Runde 2.</div>
-    </div>
-  </div>
-  <p class="hint" style="text-align:center;margin-top:14px">Mehr von <b>_emilysworld</b>: laut ihren Posts gibt es die Breakfast-Cake-Pots auch als <b>„Choc Brownie“</b> und <b>„Mix &amp; Match“</b>, jeden Montag kommt ein neues Frühstücksrezept. Ihr Profil zeigt Instagram nur eingeloggt – schick mir gern weitere Links.</p>
   <div class="foot">
     Rezepte: Schoko Overnight Oats von <b>_emilysworld</b> · Marmor-Bananenbrot von <b>pia_nutrition</b>.<br>
     Packungsgrößen = typische Größen im deutschen Supermarkt, exakte Menge in Klammern. 🥣
@@ -345,8 +289,8 @@ function buildList(){
     {id:"oats", grp:"Vorrat", nm:"Haferflocken, zart", pk:packs(g.oats*d,500,"500-g-Packung"), ex:fmtQ(g.oats*d,"g"), bd:`${d} × ${g.oats} g`},
     {id:"chia", grp:"Vorrat", nm:"Chiasamen", pk:packs(g.chia*d,200,"200-g-Beutel"), ex:fmtQ(g.chia*d,"g"), bd:`${d} × ${g.chia} g`},
     ...(whey?[
-      {id:"wheyS", grp:"Vorrat", nm:"Whey Stracciatella", pk:packs(g.wheyS*d,500,"500-g-Beutel/Dose"), ex:fmtQ(g.wheyS*d,"g"), bd:`${d} × ${g.wheyS} g · Drogerie oder online`},
-      {id:"wheyV", grp:"Vorrat", nm:"Whey Vanille", pk:packs(b.wheyV,500,"500-g-Beutel/Dose"), ex:fmtQ(b.wheyV,"g"), bd:"fürs Bananenbrot"}
+      {id:"wheyS", grp:"Vorrat prüfen", nm:"Whey Stracciatella", pk:packs(g.wheyS*d,500,"500-g-Beutel/Dose"), ex:fmtQ(g.wheyS*d,"g"), bd:`${d} × ${g.wheyS} g · Drogerie oder online`},
+      {id:"wheyV", grp:"Vorrat prüfen", nm:"Whey Vanille", pk:packs(b.wheyV,500,"500-g-Beutel/Dose"), ex:fmtQ(b.wheyV,"g"), bd:"fürs Bananenbrot"}
     ]:[]),
     {id:"flour", grp:"Backen", nm:"Weizenmehl (Type 405)", pk:"1 × 1-kg-Packung", ex:fmtQ(b.flour,"g"), bd:whey?"40 g + 30 g Whey statt 70 g Mehl":"fürs Bananenbrot"},
     {id:"choc", grp:"Süßes", nm:"Zartbitterschokolade", pk:packs(choc,100,"100-g-Tafel"), ex:fmtQ(choc,"g"),

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1410">
+<title>📖 Rezepte · Meal Prep Frühstück</title>
+<style>
+  :root{
+    --bg:#1a1410; --card:#241c16; --card2:#2e241c; --line:#3d3026;
+    --txt:#f3e9dd; --muted:#b09a85; --accent:#e8552d; --accent2:#f0a04b;
+    --green:#7bbf6a; --gold:#e8c468; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#2a1f17,#1a1410);
+    color:var(--txt);line-height:1.5;padding:24px 16px 64px;min-height:100vh;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  header{text-align:center}
+  .back{display:inline-block;margin-bottom:10px;color:var(--muted);font-size:.8rem;text-decoration:none}
+  h1{font-size:1.7rem;letter-spacing:.5px}
+  h1 .em{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.9rem;margin-top:4px}
+  .tabs{display:flex;gap:4px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px;margin:14px auto 0;max-width:420px}
+  .tabs a{flex:1;text-align:center;padding:8px 6px;border-radius:999px;font-size:.82rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .tabs a.on{background:var(--accent);color:#fff}
+
+  .jump{display:flex;gap:6px;overflow-x:auto;margin-top:16px;padding-bottom:4px;scrollbar-width:none}
+  .jump a{flex:0 0 auto;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.78rem;color:var(--txt);text-decoration:none}
+  .jump a b{color:var(--gold)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:18px;scroll-margin-top:12px}
+  .top{display:grid;grid-template-columns:130px 1fr;gap:14px;align-items:start}
+  @media(max-width:480px){.top{grid-template-columns:104px 1fr}}
+  .top img,.top .ph{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+  .top .ph{display:flex;align-items:center;justify-content:center;font-size:3rem;background:var(--card2)}
+  .day{font-size:.7rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
+  h2{font-size:1.05rem;color:var(--accent2);line-height:1.3;margin-top:2px}
+  .src{font-size:.74rem;color:var(--muted);margin-top:3px}
+  .src a{color:var(--accent2)}
+  .tag{display:inline-block;font-size:.68rem;font-weight:700;border-radius:999px;padding:3px 9px;margin:7px 5px 0 0}
+  .tag.o{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+  .tag.n{background:rgba(232,196,104,.1);color:var(--gold);border:1px solid rgba(232,196,104,.35)}
+  .tag.p{background:rgba(123,191,106,.12);color:var(--green);border:1px solid rgba(123,191,106,.35)}
+  .meta{font-size:.78rem;color:var(--muted);margin-top:8px}
+  .meta b{color:var(--txt)}
+
+  h3{font-size:.74rem;text-transform:uppercase;letter-spacing:1.3px;color:var(--gold);margin:18px 0 8px}
+  .sec{font-size:.8rem;color:var(--accent2);font-weight:700;margin:10px 0 4px}
+  .ing{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.88rem}
+  .ing .q{text-align:right;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  ol{list-style:none;counter-reset:s}
+  ol li{counter-increment:s;display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:.88rem}
+  ol li:first-child{border-top:none;padding-top:0}
+  ol li::before{content:counter(s);flex:0 0 24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+  ol li b{color:var(--gold)}
+  .tip{font-size:.8rem;margin-top:12px;padding:9px 11px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+  .tip b{color:var(--txt)}
+  .foot{text-align:center;color:var(--muted);font-size:.74rem;margin-top:26px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="index.html">← Pizzateig-Calculator</a>
+    <h1>📖 <span class="em">Rezepte</span></h1>
+    <div class="sub">Bild, Zutaten &amp; Schritt-für-Schritt · pro Glas, wenn nicht anders angegeben</div>
+    <nav class="tabs"><a href="meal-prep.html">📋 Plan &amp; Prep</a><a href="rezepte.html" class="on">📖 Rezepte</a><a href="einkaufsliste.html">🛒 Einkauf</a></nav>
+  </header>
+
+  <div class="jump" id="jump"></div>
+  <div id="recipes"></div>
+
+  <div class="foot">
+    „Nachgebaut“ = die Erstellerin verschickt das Rezept nur per DM; Mengen aus Video-Bild, Beschreibung und ihrem Grundrezept abgeleitet.<br>
+    Proteinpulver = dein Whey von zuhause (Vanille/Stracciatella, egal welches). Bilder © der jeweiligen Erstellerin.
+  </div>
+</div>
+
+<script>
+// q = Menge, t = Zutat; {sec:"..."} = Zwischenüberschrift
+const R = [
+{ id:"banana", day:"Mo · Runde 1", title:"Choc Banana Bread Oats", img:"img/banana-bread-oats.jpg",
+  by:"_emilysworld", link:"https://www.instagram.com/reel/DbvKN5nM45R/", orig:false,
+  meta:"<b>10 min</b> + über Nacht · ≈ <b>22 g Protein</b> (mit Proteinpulver ≈ 40 g)",
+  ing:[["45 g","zarte Haferflocken"],["10 g","Chiasamen"],["5 g","Backkakao"],["½ TL","Zimt + 1 Prise extra"],["1","reife Banane"],["50 g","Skyr"],["100 ml","Milch"],["optional","25 g Proteinpulver + 40 ml Milch"],
+       {sec:"Topping (morgens)"},["40 g","Skyr"],["10 g","Zartbitter, gehackt"],["ein paar","Walnüsse"]],
+  steps:[
+    "Banane halbieren: <b>eine Hälfte zerdrücken</b>, die andere in ca. 5 mm dicke Scheiben schneiden.",
+    "Bananenscheiben in einer <b>beschichteten Pfanne ohne Fett</b> mit einer Prise Zimt pro Seite 1–2 min goldbraun braten. Kurz abkühlen lassen.",
+    "Hafer, Chia, Kakao, Zimt (und Proteinpulver) ins Glas.",
+    "Zerdrückte Banane, 50 g Skyr und die Milch dazu, <b>gründlich verrühren</b> – Chia klumpt sonst.",
+    "Die karamellisierten Scheiben mit einem Löffel <b>an die Glaswand drücken</b> (sieht aus wie im Video). Deckel drauf, ab in den Kühlschrank.",
+    "Morgens: Skyr, Schokolade und Walnüsse obendrauf."],
+  tip:"<b>Haltbarkeit max. 3 Tage</b> – die Bananenscheiben werden danach dunkel. Deshalb am Montag." },
+
+{ id:"lemon", day:"Di + Mi · Runde 1", title:"Lemon Berry Breakfast-Cake-Pots", img:"img/lemon-berry-pots.jpg",
+  by:"_emilysworld", link:"https://www.instagram.com/reel/DYwRscRMKdi/", orig:false,
+  meta:"<b>2 Pots</b> · 20 min aktiv + 20 min Backen",
+  ing:[{sec:"Zitronen-Haferkuchen"},["80 g","Haferflocken"],["1","Ei"],["75 g","Skyr"],["15 g","Honig"],["½","Bio-Zitrone: Abrieb + 1 EL Saft"],["½ TL","Backpulver"],["40 g","Blaubeeren"],
+       {sec:"Himbeer-Chia-Jam"},["100 g","TK-Himbeeren"],["½ EL","Chiasamen"],["½ TL","Honig"],
+       {sec:"Zitronen-Creme"},["150 g","Skyr"],["½","Bio-Zitrone: Abrieb"],["½ EL","Honig"],
+       {sec:"Topping"},["40 g","Blaubeeren"]],
+  steps:[
+    "Ofen auf <b>180 °C Ober-/Unterhitze</b> vorheizen (oder mit dem Bananenbrot bei 200 °C mitbacken, dann nur ca. 15 min).",
+    "Haferflocken im Mixer <b>fein mahlen</b>. Mit Ei, Skyr, Honig, Zitronenabrieb, Saft und Backpulver verrühren, Blaubeeren unterheben.",
+    "Teig in eine kleine Form oder 3–4 Muffinförmchen füllen, <b>18–25 min</b> backen (Stäbchenprobe). Komplett abkühlen lassen.",
+    "Jam: Himbeeren in einem kleinen Topf <b>5 min köcheln</b>, mit der Gabel zerdrücken, vom Herd nehmen, Chia + Honig einrühren, 10 min quellen lassen.",
+    "Creme: Skyr mit Zitronenabrieb und Honig glatt rühren.",
+    "Kuchen in Stücke brechen. In 2 Gläser schichten: <b>Kuchen → Jam → Creme → Kuchen → Jam → Creme</b>.",
+    "Blaubeeren obendrauf, Deckel zu, Kühlschrank."],
+  tip:"<b>Geschichtet max. 3 Tage</b>, danach weicht der Kuchen durch. Kuchen &amp; Jam halten getrennt 5 Tage – wer mag, schichtet Pot 2 erst Dienstagabend." },
+
+{ id:"bueno", day:"Do · Runde 2", title:"Bueno Overnight Oats", img:"img/bueno-oats.jpg",
+  by:"marenmorereal", link:"https://www.instagram.com/reel/DceOJSCsuks/", orig:true,
+  meta:"<b>10 min</b> + mind. 1 h · Original unter 2 € pro Portion",
+  ing:[["60 g","Hafermehl (= zarte Haferflocken fein gemixt)"],["½ EL","Chiasamen"],["1 EL","gemahlene Haselnüsse (optional)"],["1–1½ EL","Agavendicksaft oder Honig"],["50 g","Skyr"],["ca. 100 ml","Milch"],["optional","1 EL Proteinpulver + 1 Schuss Milch"],
+       {sec:"Topping"},["1 EL","Haselnussmus"],["20–25 g","Zartbitterschokolade"],["1 Stück","Kinder Bueno"]],
+  steps:[
+    "Haferflocken im Mixer zu Mehl mahlen.",
+    "Hafermehl, Chia, Haselnüsse, Agave/Honig, Skyr und Milch verrühren, bis es cremig ist. Ins Glas füllen und <b>glatt streichen</b>.",
+    "Haselnussmus gleichmäßig obendrauf verstreichen (vorher 10 min kalt stellen macht es leichter).",
+    "Schokolade schmelzen – Mikrowelle in 20-Sekunden-Schritten oder Wasserbad – und als <b>Decke über das Haselnussmus</b> gießen.",
+    "Ein Stück Bueno auflegen, solange die Schokolade noch weich ist.",
+    "Mindestens 1 h, besser über Nacht in den Kühlschrank."],
+  tip:"<b>Kokosöl?</b> Brauchst du nicht. Es macht die Schokodecke nur etwas weicher, damit sie beim Löffeln nicht splittert. Ohne wird sie knackiger – einfach mit dem Löffel kurz draufklopfen. Alternative: ¼ TL Butter oder neutrales Öl in die Schokolade.<br><b>Haltbarkeit 3–4 Tage</b>, die Schokodecke verschließt das Glas." },
+
+{ id:"cookie", day:"Fr · Runde 2", title:"Cookie Dough Overnight Oats", img:"img/cookie-dough-oats.jpg",
+  by:"_emilysworld", link:"https://www.instagram.com/reel/Dcskhzxs3Ms/", orig:false,
+  meta:"<b>5 min</b> + über Nacht · ≈ <b>28 g Protein</b>",
+  ing:[["45 g","zarte Haferflocken"],["10 g","Chiasamen"],["25 g","Proteinpulver (Vanille passt am besten)"],["15 g","Erdnussmus"],["1 Prise","Salz + etwas Vanille"],["50 g","Skyr"],["10 g","Honig oder Ahornsirup"],["140 ml","Milch"],["10 g","Zartbitter, fein gehackt"],
+       {sec:"Topping (morgens)"},["40 g","Skyr"],["60 g","Erdbeeren"],["10 g","Zartbitter, gehackt"]],
+  steps:[
+    "Hafer, Chia, Proteinpulver und Salz im Glas mischen.",
+    "Erdnussmus, Skyr, Honig, Vanille und Milch dazu und <b>kräftig verrühren</b>, bis das Erdnussmus verteilt ist (\"Cookie Dough\"-Geschmack).",
+    "Gehackte Schokolade unterheben, Deckel drauf, Kühlschrank.",
+    "Morgens: Skyr, geschnittene Erdbeeren und Schokolade obendrauf."],
+  tip:"<b>Haltbarkeit 3–4 Tage.</b> Erdbeeren erst morgens schneiden – sie werden sonst matschig." },
+
+{ id:"schoko", day:"Sa · Runde 2", title:"Schoko Overnight Oats", img:"img/schoko-oats.jpg",
+  by:"_emilysworld", link:"https://www.instagram.com/reel/C-Alb5KsBwA/", orig:true,
+  meta:"<b>5 min</b> + über Nacht · ≈ <b>18 g Protein</b>, mit Proteinpulver ≈ <b>38 g</b>",
+  ing:[["45 g","zarte Haferflocken"],["10 g","Chiasamen"],["5 g","Backkakao, ungesüßt"],["optional","25 g Proteinpulver (+ 40 ml Milch)"],["50 g","Skyr"],["10 g","Honig"],["100 ml","Milch"],
+       {sec:"Topping (morgens)"},["40 g","Skyr"],["60 g","Himbeeren (TK geht super)"],["15 g","Zartbitter, gehackt"]],
+  steps:[
+    "Hafer, Chia, Kakao (und Proteinpulver) ins Glas.",
+    "50 g Skyr, Honig und Milch dazu, gut verrühren.",
+    "Deckel drauf, über Nacht in den Kühlschrank.",
+    "Morgens: Skyr, Himbeeren und Schokolade obendrauf. TK-Himbeeren kannst du abends schon drauflegen, dann sind sie morgens aufgetaut."],
+  tip:"Dicker = weniger Milch, flüssiger = mehr Milch." },
+
+{ id:"brot", day:"Mittags · Mo–Fr", title:"Marmor-Bananenbrot ohne Zucker", img:null,
+  by:"pia_nutrition", link:null, orig:true,
+  meta:"1 Kastenform · <b>~10 Scheiben</b> · 15 min + 25–27 min Backen",
+  ing:[["5","reife Bananen (4 in den Teig, 1 obendrauf)"],["2","Eier"],["150 g","Skyr"],["40 g","Mehl"],["30 g","Proteinpulver Vanille (statt weiterer 30 g Mehl)"],["2 EL","Milch extra"],["1 TL","Backpulver"],["1 TL","Zimt"],["12 g","Backkakao"],["60 g","Zartbitter / Choco Chunks"]],
+  steps:[
+    "Ofen auf <b>200 °C Ober-/Unterhitze</b> vorheizen, Kastenform fetten oder mit Backpapier auslegen.",
+    "4 Bananen zerdrücken, mit Eiern, Skyr, Mehl, Proteinpulver, Milch, Backpulver und Zimt verrühren.",
+    "<b>Ein Drittel</b> des Teigs abnehmen. In den Rest Kakao und gehackte Schokolade rühren.",
+    "Hell und dunkel <b>abwechselnd</b> in die Form schichten, einmal mit der Gabel durchziehen.",
+    "5. Banane längs halbieren und mit der Schnittfläche nach oben auflegen.",
+    "<b>25–27 min</b> backen (mit Proteinpulver 3–5 min kürzer). Stäbchenprobe.",
+    "10 min in der Form, dann auf dem Gitter komplett abkühlen. In 10 Scheiben schneiden, in einer Dose in den Kühlschrank."],
+  tip:"Mittags 2 Scheiben + 150 g Skyr. Vor dem Training 2 Scheiben mit 90–120 min Vorlauf, sonst 1 Scheibe + Banane. Hält 4–5 Tage." }
+];
+
+const row = i => i.sec ? `<div class="sec" style="grid-column:1/-1">${i.sec}</div>` : `<div class="q">${i[0]}</div><div>${i[1]}</div>`;
+document.getElementById("jump").innerHTML = R.map(r=>`<a href="#${r.id}"><b>${r.day.split(" ·")[0]}</b> ${r.title.replace(" Overnight Oats"," Oats").replace(" Breakfast-Cake-Pots"," Pots").replace(" ohne Zucker","")}</a>`).join("");
+document.getElementById("recipes").innerHTML = R.map(r=>`
+  <div class="card" id="${r.id}">
+    <div class="top">
+      ${r.img ? `<a href="${r.link}" target="_blank" rel="noopener"><img src="${r.img}" alt="${r.title}" loading="lazy"></a>` : `<div class="ph">🍌</div>`}
+      <div>
+        <div class="day">${r.day}</div>
+        <h2>${r.title}</h2>
+        <div class="src">von <b>${r.by}</b>${r.link?` · <a href="${r.link}" target="_blank" rel="noopener">Reel ansehen ↗</a>`:""}</div>
+        <span class="tag ${r.orig?"o":"n"}">${r.orig?"✓ Originalrezept":"≈ nachgebaut"}</span>
+        <div class="meta">${r.meta}</div>
+      </div>
+    </div>
+    <h3>Zutaten</h3>
+    <div class="ing">${r.ing.map(row).join("")}</div>
+    <h3>Zubereitung</h3>
+    <ol>${r.steps.map(s=>`<li><span>${s}</span></li>`).join("")}</ol>
+    ${r.tip?`<div class="tip">💡 ${r.tip}</div>`:""}
+  </div>`).join("");
+</script>
+</body>
+</html>
