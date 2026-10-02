@@ -175,6 +175,12 @@
     <div id="shelf"></div>
   </div>
 
+
+  <!-- SAISON -->
+  <div class="card">
+    <h2>🍂 Saison <span class="cnt" id="seasonMonth"></span></h2>
+    <div id="season"></div>
+  </div>
   <!-- TAGESPLAN -->
   <div class="card">
     <h2>📅 Tagesplan</h2>
@@ -279,8 +285,8 @@ function buildList(){
   const items=[
     {id:"banana", grp:"Obst", nm:"Bananen, reif", pk:`${b.bananas+1} Stück`, ex:`${b.bananas} fürs Brot + 1 Reserve`,
       bd:"4 in den Teig, 1 längs halbiert obendrauf, 1 für Trainingstage mit wenig Vorlauf"},
-    {id:"rasp", grp:"Obst", nm:"Himbeeren", pk:packs(g.rasp*d,125,"125-g-Schale"), ex:fmtQ(g.rasp*d,"g"),
-      bd:"Frisch nur 2–3 Tage haltbar → für die zweite Wochenhälfte besser TK-Himbeeren (abends ins Glas, tauen über Nacht auf)"},
+    {id:"rasp", grp:"Tiefkühl", nm:"Himbeeren TK (z. B. REWE Bio)", pk:packs(g.rasp*d,300,"300-g-Beutel"), ex:fmtQ(g.rasp*d,"g"),
+      bd:"Frische Beeren haben jetzt keine Saison – TK ist reif gepflückt und günstiger. Abends aufs Glas, über Nacht auftauen. Alternative: ½ Birne pro Glas"},
     {id:"skyr", grp:"Kühlregal", nm:"Skyr natur", pk:skyrPacks(skyr), ex:fmtQ(skyr,"g"),
       bd:`Oats ${skyrOats} g · Brot ${b.skyr} g · mittags ${d} × ${LUNCH_SKYR} g = ${skyrLunch} g`},
     {id:"milk", grp:"Kühlregal", nm:"Milch", pk:packs(milk,1000,"1-l-Packung"), ex:fmtQ(milk,"ml"),
@@ -302,7 +308,7 @@ function buildList(){
   ];
   return items;
 }
-const GROUPS=[["Obst","🍌 Obst"],["Kühlregal","🥛 Kühlregal"],["Vorrat","🌾 Vorrat"],["Backen","🧁 Backen"],["Süßes","🍫 Süßes"],["Vorrat prüfen","🏠 Vorrat prüfen (meist schon zuhause)"]];
+const GROUPS=[["Obst","🍌 Obst"],["Kühlregal","🥛 Kühlregal"],["Tiefkühl","❄️ Tiefkühl"],["Vorrat","🌾 Vorrat"],["Backen","🧁 Backen"],["Süßes","🍫 Süßes"],["Vorrat prüfen","🏠 Vorrat prüfen (meist schon zuhause)"]];
 
 function renderList(){
   const items=buildList();
@@ -355,7 +361,7 @@ function renderShelf(){
     h+=`<div class="warn ok">✓ Bei ${days} Tag${days>1?"en":""} kannst du alle Gläser am Sonntag komplett füllen.</div>`;
   }
   h+=`<p class="how"><b>Bananenbrot</b> hält gut verschlossen im Kühlschrank <b>4–5 Tage</b> – reicht für Mo–Fr. Wird es Freitag zu trocken: Scheibe kurz toasten. Ab Tag 6 Scheiben einfrieren (Gefrierbeutel, einzeln entnehmen, 20 min auftauen).</p>`;
-  h+=`<p class="how"><b>Toppings:</b> frische Himbeeren nur 2–3 Tage → ab Mittwoch TK-Himbeeren. Geöffneter Skyr hält ca. 3–5 Tage; den ältesten Becher zuerst aufbrauchen.</p>`;
+  h+=`<p class="how"><b>Toppings:</b> TK-Himbeeren halten ewig – abends aufs Glas legen, morgens sind sie aufgetaut. Geöffneter Skyr hält ca. 3–5 Tage; den ältesten Becher zuerst aufbrauchen.</p>`;
   $("shelf").innerHTML=h;
 }
 
@@ -382,7 +388,7 @@ function renderRecipes(){
     ${row(g.honey+" g","Honig")}
     ${row(g.milk+" ml","Milch"+(whey?" (100 + 40 wegen Whey)":""))}
     ${row(g.skyrTop+" g","Skyr – Topping, morgens")}
-    ${row(g.rasp+" g","Himbeeren – Topping, morgens")}
+    ${row(g.rasp+" g","TK-Himbeeren – Topping (oder ½ Birne)")}
     ${row(g.choc+" g","Zartbitterschokolade, gehackt – Topping, morgens")}
   </div>
   <span class="pill hl">Protein <b>≈ ${g.protein} g</b></span><span class="pill">${days} Gläser</span>
@@ -403,6 +409,28 @@ function renderRecipes(){
   <p class="how">Bananen zerdrücken, mit Eiern, Skyr, Mehl${whey?", Whey, Milch":""}, Backpulver und Zimt verrühren. Ein Drittel abnehmen, in den Rest Kakao und Schoko einrühren. Abwechselnd in die Form schichten, einmal durchziehen, mit Bananenhälften toppen. ${b.bake} min backen. Abkühlen, schneiden, in einer Dose in den Kühlschrank.</p>`;
 }
 
+
+// ---- Saison (regionales Obst in Deutschland) -------------------------------
+const SEASON=[
+ /*Jan*/ {f:"Äpfel, Birnen (Lager)", tip:"Beeren nur TK. Apfel-Zimt oder Birne passen zu allen Oats."},
+ /*Feb*/ {f:"Äpfel, Birnen (Lager)", tip:"Beeren nur TK. Apfel-Zimt oder Birne passen zu allen Oats."},
+ /*Mär*/ {f:"Äpfel (Lager), Rhabarber ab Ende März", tip:"Beeren nur TK."},
+ /*Apr*/ {f:"Rhabarber, Äpfel (Lager)", tip:"Rhabarber-Kompott statt Beeren-Jam in den Lemon Pots."},
+ /*Mai*/ {f:"Erdbeeren (ab Mitte Mai), Rhabarber", tip:"Erdbeeren frisch – perfekt für Cookie Dough Oats."},
+ /*Jun*/ {f:"Erdbeeren, Kirschen, Johannisbeeren, Himbeeren", tip:"Beeren-Hochsaison: alles frisch nehmen."},
+ /*Jul*/ {f:"Himbeeren, Heidelbeeren, Kirschen, Aprikosen, Erdbeeren", tip:"Beeren-Hochsaison: alles frisch nehmen."},
+ /*Aug*/ {f:"Heidelbeeren, Brombeeren, Pflaumen, Pfirsiche, Himbeeren", tip:"Frische Heidelbeeren für die Lemon Pots."},
+ /*Sep*/ {f:"Zwetschgen, Äpfel, Birnen, Trauben, Brombeeren", tip:"Zwetschgen-Kompott in den Oats ist ein Traum."},
+ /*Okt*/ {f:"Äpfel, Birnen, Trauben, Zwetschgen (bis Mitte Okt.), Quitten", tip:"Beeren nur noch TK. Birne + Schoko, Apfel + Zimt + Erdnuss."},
+ /*Nov*/ {f:"Äpfel, Birnen, Quitten", tip:"Beeren nur TK. Bratapfel-Topping: Apfelwürfel mit Zimt kurz anbraten."},
+ /*Dez*/ {f:"Äpfel, Birnen (Lager)", tip:"Beeren nur TK. Etwas Spekulatiusgewürz in die Oats – Weihnachten im Glas."}
+];
+function renderSeason(){
+  const m=new Date().getMonth(), s=SEASON[m];
+  $("seasonMonth").textContent=new Date().toLocaleDateString("de-DE",{month:"long"});
+  $("season").innerHTML=`<p class="how" style="margin-top:0"><b>Frisch &amp; regional:</b> ${s.f}</p><div class="warn gold">💡 ${s.tip}</div>
+    <p class="hint">TK-Beeren sind reif gepflückt und schockgefrostet – außerhalb der Saison günstiger und oft aromatischer als frische Import-Beeren.</p>`;
+}
 // ---- State -----------------------------------------------------------------
 function save(){
   try{ localStorage.setItem(KEY,JSON.stringify({whey,days,checked})); }catch(e){}
@@ -419,7 +447,7 @@ function renderAll(){
   document.querySelectorAll("#segWhey button").forEach(b=>b.classList.toggle("on",(b.dataset.v==="1")===whey));
   $("daysVal").textContent=days+(days===1?" Tag":" Tage");
   $("dMinus").disabled=days<=1; $("dPlus").disabled=days>=7;
-  renderList(); renderPrep(); renderShelf(); renderPlan(); renderRecipes();
+  renderList(); renderPrep(); renderShelf(); renderPlan(); renderRecipes(); renderSeason();
 }
 
 $("segWhey").addEventListener("click",e=>{ if(e.target.dataset.v){ whey=e.target.dataset.v==="1"; renderAll(); save(); }});

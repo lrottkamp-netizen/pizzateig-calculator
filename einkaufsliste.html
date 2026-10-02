@@ -65,6 +65,7 @@
       <b>Sa</b><a href="rezepte.html#schoko">Schoko Overnight Oats</a>
     </div>
     <div class="hint">Runde 1 (Mo–Mi) am Sonntag preppen, Runde 2 (Do–Sa) am Mittwochabend. Lemon-Kuchen als halbes Rezept (2 Pots).</div>
+    <div class="hint">🍂 <b>Oktober:</b> Beeren haben keine Saison mehr → TK-Beerenmix (reif gepflückt, günstiger). Frisch &amp; regional: Äpfel, Birnen, Trauben, Zwetschgen.</div>
   </div>
 
   <div class="card">
@@ -97,8 +98,8 @@ const LISTS={
   l1:[
     ["ban","🍌 Obst","Banane, reif","1 Stück","Banana Bread Oats",null],
     ["zit","🍌 Obst","Bio-Zitrone","1 Stück","Lemon Pots",null],
-    ["blau","🍌 Obst","Heidelbeeren (REWE Bio)","1 × 125-g-Schale","80 g",2.89],
-    ["him","❄️ Tiefkühl","REWE Bio Himbeeren TK","1 × 300-g-Beutel","160 g · Jam + Schoko Oats",3.19],
+    ["apfel","🍌 Obst","Äpfel oder Birnen, regional","2 Stück","½ für Cookie Dough, Rest als Snack",null],
+    ["beeren","❄️ Tiefkühl","ja! Beeren-Mischung TK","1 × 750-g-Beutel","240 g · Lemon Pots + Schoko Oats",3.29],
     ["skyr1","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","315 g · Runde 1",1.29],
     ["milch","🥛 Kühlregal","ja! H-Milch 1,5 %","1 × 1-l-Packung","480 ml",0.85],
     ["ei","🥛 Kühlregal","Eier","1 × 6er-Packung","1 Stück",null],
@@ -111,8 +112,7 @@ const LISTS={
     ["bueno","🍫 Süßes","Kinder Bueno","1 × 43 g (2 Riegel)","1 Stück",null]
   ],
   l2:[
-    ["skyr2","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","230 g · Runde 2",1.29],
-    ["erd","🍌 Obst","Erdbeeren","1 × 250-g-Schale","60 g · Cookie Dough",2.99]
+    ["skyr2","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","230 g · Runde 2",1.29]
   ],
   l3:[
     ["emus","✅ Hast du schon","Erdnussmus","—","15 g",null],
@@ -148,7 +148,7 @@ document.addEventListener("click",e=>{
 document.getElementById("reset").addEventListener("click",()=>{ checked={}; save(); render(); });
 render();
 const all=[...LISTS.l1,...LISTS.l2], sum=all.reduce((a,i)=>a+(i[5]||0),0), opt=all.filter(i=>i[2].includes("optional")).reduce((a,i)=>a+(i[5]||0),0);
-document.getElementById("sum").innerHTML=`Grob <b>≈ ${eur(sum)}</b> für die Positionen mit Preis, ohne die optionalen Nüsse <b>≈ ${eur(sum-opt)}</b>. Dazu Banane, Zitrone, Eier, Haselnussmus und Bueno. Preise: zuletzt gemeldete REWE-Preise, je nach Markt anders.`;
+document.getElementById("sum").innerHTML=`Grob <b>≈ ${eur(sum)}</b> für die Positionen mit Preis, ohne die optionalen Nüsse <b>≈ ${eur(sum-opt)}</b>. Dazu Banane, Zitrone, Äpfel/Birnen, Eier, Haselnussmus und Bueno. Preise: zuletzt gemeldete REWE-Preise, je nach Markt anders.`;
 </script>
 </body>
 </html>
