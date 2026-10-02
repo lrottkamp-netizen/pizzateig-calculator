@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1410">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Frühstück">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%231a1410'/%3E%3Ctext x='90' y='128' font-size='110' text-anchor='middle'%3E%F0%9F%A5%A3%3C/text%3E%3C/svg%3E">
+<title>🥣 Meal Prep Frühstück · Overnight Oats & Bananenbrot</title>
+<style>
+  :root{
+    --bg:#1a1410; --card:#241c16; --card2:#2e241c; --line:#3d3026;
+    --txt:#f3e9dd; --muted:#b09a85; --accent:#e8552d; --accent2:#f0a04b;
+    --green:#7bbf6a; --red:#e06a5a; --gold:#e8c468;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#2a1f17,#1a1410);
+    color:var(--txt);line-height:1.5;padding:24px 16px 64px;min-height:100vh;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  header{text-align:center;margin-bottom:6px}
+  h1{font-size:1.7rem;letter-spacing:.5px}
+  h1 .em{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.9rem;margin-top:4px}
+  .back{display:inline-block;margin-bottom:10px;color:var(--muted);font-size:.8rem;text-decoration:none}
+  .back:hover{color:var(--accent2)}
+
+  /* toggle bars */
+  .toggles{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:18px}
+  .tg{display:flex;flex-direction:column;gap:5px;align-items:center}
+  .tg .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
+  .seg{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{border:none;background:transparent;color:var(--muted);padding:7px 16px;border-radius:999px;font-size:.85rem;cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--accent);color:#fff}
+  .stepper{display:inline-flex;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .stepper button{border:none;background:transparent;color:var(--txt);width:34px;height:31px;border-radius:999px;font-size:1.1rem;cursor:pointer}
+  .stepper button:active{background:var(--accent)}
+  .stepper b{min-width:64px;text-align:center;font-size:.9rem;font-variant-numeric:tabular-nums}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:18px}
+  .card h2{font-size:.78rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent2);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .card h2 .cnt{color:var(--muted);letter-spacing:.5px;text-transform:none;font-weight:400}
+  .hint{font-size:.74rem;color:var(--muted);margin-top:5px}
+  .warn{font-size:.8rem;margin-top:10px;padding:9px 11px;border-radius:8px}
+  .warn.ok{background:rgba(123,191,106,.12);color:var(--green);border:1px solid rgba(123,191,106,.3)}
+  .warn.bad{background:rgba(224,106,90,.12);color:var(--red);border:1px solid rgba(224,106,90,.35)}
+  .warn.gold{background:rgba(232,196,104,.1);color:var(--gold);border:1px solid rgba(232,196,104,.3)}
+  .hide{display:none!important}
+
+  /* Einkaufsliste */
+  .grpttl{font-size:.8rem;color:var(--gold);font-weight:700;margin:18px 0 6px}
+  .grpttl:first-of-type{margin-top:0}
+  .grpttl.check{color:var(--muted);border-top:1px dashed var(--line);padding-top:14px}
+  .li{display:flex;gap:12px;align-items:flex-start;padding:11px 10px;border-radius:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+  .li + .li{border-top:1px solid var(--line)}
+  .li input{position:absolute;opacity:0;pointer-events:none}
+  .li .box{flex:0 0 22px;height:22px;border-radius:6px;border:2px solid var(--line);margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff;transition:.15s}
+  .li .t{flex:1;min-width:0}
+  .li .nm{font-size:.95rem}
+  .li .pk{font-size:.86rem;color:var(--accent2);font-weight:600}
+  .li .pk small{color:var(--muted);font-weight:400}
+  .li .bd{font-size:.72rem;color:var(--muted);margin-top:1px}
+  .li.done .box{background:var(--green);border-color:var(--green)}
+  .li.done .box::after{content:"✓"}
+  .li.done .nm,.li.done .pk{text-decoration:line-through;opacity:.45}
+  .li.done .bd{opacity:.45}
+
+  .btnrow{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+  button.act{background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:9px 16px;border-radius:9px;font-size:.85rem;cursor:pointer}
+  button.act:hover{border-color:var(--accent)}
+
+  /* Rezepte */
+  .rec{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.88rem}
+  .rec .q{text-align:right;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pill{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:.78rem;color:var(--muted);margin:12px 6px 0 0}
+  .pill b{color:var(--txt)}
+  .pill.hl{border-color:var(--gold);background:rgba(232,196,104,.1)}
+  .pill.hl b{color:var(--gold)}
+  .how{font-size:.84rem;color:var(--muted);margin-top:12px;line-height:1.55}
+  .how b{color:var(--txt)}
+
+  /* Ablauf */
+  .step{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+  .step:first-of-type{border-top:none;padding-top:0}
+  .step .n{flex:0 0 54px;height:26px;border-radius:999px;background:var(--accent);color:#fff;font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .step .n.later{background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+  .step .b{font-size:.88rem}
+  .step .b b{color:var(--gold)}
+
+  .day{display:flex;gap:12px;padding:9px 0;border-top:1px solid var(--line);font-size:.88rem}
+  .day:first-of-type{border-top:none;padding-top:0}
+  .day .w{flex:0 0 92px;color:var(--accent2);font-weight:600}
+  .day .muted{color:var(--muted);font-size:.8rem}
+
+  .foot{text-align:center;color:var(--muted);font-size:.74rem;margin-top:26px;line-height:1.7}
+  .foot a{color:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="index.html">← Pizzateig-Calculator</a>
+    <h1>🥣 Meal Prep <span class="em">Frühstück</span></h1>
+    <div class="sub">Schoko Overnight Oats + Marmor-Bananenbrot · einmal Sonntag preppen</div>
+  </header>
+
+  <div class="toggles">
+    <div class="tg">
+      <span class="lbl">Whey</span>
+      <div class="seg" id="segWhey">
+        <button data-v="1" class="on">Mit Whey</button>
+        <button data-v="0">Ohne</button>
+      </div>
+    </div>
+    <div class="tg">
+      <span class="lbl">Tage (Oats)</span>
+      <div class="stepper">
+        <button id="dMinus" aria-label="Weniger Tage">−</button>
+        <b id="daysVal">5 Tage</b>
+        <button id="dPlus" aria-label="Mehr Tage">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EINKAUFSLISTE -->
+  <div class="card">
+    <h2>🛒 Einkaufsliste <span class="cnt" id="listCnt"></span></h2>
+    <div id="list"></div>
+    <div class="btnrow">
+      <button class="act" id="btnReset">↺ Haken zurücksetzen</button>
+    </div>
+  </div>
+
+  <!-- PREP-ABLAUF -->
+  <div class="card">
+    <h2>⏱️ Prep-Ablauf Sonntag <span class="cnt">ca. 2 h, davon ~40 min aktiv</span></h2>
+    <div id="prep"></div>
+  </div>
+
+  <!-- HALTBARKEIT -->
+  <div class="card">
+    <h2>🧊 Haltbarkeit</h2>
+    <div id="shelf"></div>
+  </div>
+
+  <!-- TAGESPLAN -->
+  <div class="card">
+    <h2>📅 Tagesplan</h2>
+    <div id="plan"></div>
+  </div>
+
+  <!-- REZEPTE -->
+  <div class="card">
+    <h2>① Schoko Overnight Oats <span class="cnt">pro Glas</span></h2>
+    <div id="recOats"></div>
+  </div>
+
+  <div class="card">
+    <h2>② Marmor-Bananenbrot ohne Zucker <span class="cnt">1 Kastenform · ~10 Scheiben</span></h2>
+    <div id="recBread"></div>
+  </div>
+
+  <div class="foot">
+    Rezepte: Schoko Overnight Oats von <b>_emilysworld</b> · Marmor-Bananenbrot von <b>pia_nutrition</b>.<br>
+    Packungsgrößen = typische Größen im deutschen Supermarkt, exakte Menge in Klammern. 🥣
+  </div>
+</div>
+
+<script>
+const KEY = "mealPrepFruehstueck";
+const $ = id => document.getElementById(id);
+let whey = true, days = 5, checked = {};
+
+// ---- Rezepte ---------------------------------------------------------------
+// pro Glas Overnight Oats
+function oatsPerGlass(){
+  return {
+    oats:45, chia:10, cocoa:5, skyrIn:50, skyrTop:40, honey:10,
+    milk: whey ? 140 : 100,
+    rasp:60, choc:15,
+    wheyS: whey ? 25 : 0,
+    protein: whey ? 38 : 18
+  };
+}
+// 1 Kastenform Bananenbrot (fix, skaliert nicht mit den Tagen)
+function bread(){
+  return {
+    bananas:5, eggs:2, skyr:150,
+    flour: whey ? 40 : 70,
+    wheyV: whey ? 30 : 0,
+    milk: whey ? 30 : 0,        // 2 EL ≈ 30 ml
+    cocoa:12, choc:60, slices:10,
+    bake: whey ? "25–27" : "ca. 30"
+  };
+}
+const LUNCH_SKYR = 150;
+
+// ---- Packungsgrößen ------------------------------------------------------
+function fmtQ(v,u){ return (u==="ml" && v>=1000) ? (v/1000).toFixed(2).replace(/\.?0+$/,"").replace(".",",")+" l" : Math.round(v)+" "+u; }
+function packs(need,size,label){
+  const n = Math.max(1,Math.ceil(need/size));
+  return `${n} × ${label}`;
+}
+// Skyr gibt's als 450-g- (z. B. Arla) und 500-g-Becher (Eigenmarken) → Kombi mit wenig Rest
+function skyrPacks(need){
+  let best=null;
+  for(let a=0;a<=Math.ceil(need/450);a++){
+    const b=Math.max(0,Math.ceil((need-450*a)/500));
+    const tot=450*a+500*b, n=a+b;
+    if(!best || tot<best.tot || (tot===best.tot && n<best.n)) best={a,b,tot,n};
+  }
+  const parts=[];
+  if(best.a) parts.push(`${best.a} × 450-g-Becher`);
+  if(best.b) parts.push(`${best.b} × 500-g-Becher`);
+  return parts.join(" + ");
+}
+
+function buildList(){
+  const g=oatsPerGlass(), b=bread(), d=days;
+  const skyrOats=(g.skyrIn+g.skyrTop)*d, skyrLunch=LUNCH_SKYR*d;
+  const skyr=skyrOats+b.skyr+skyrLunch;
+  const milk=g.milk*d+b.milk;
+  const cocoa=g.cocoa*d+b.cocoa;
+  const choc=g.choc*d+b.choc;
+  const items=[
+    {id:"banana", grp:"Obst", nm:"Bananen, reif", pk:`${b.bananas+1} Stück`, ex:`${b.bananas} fürs Brot + 1 Reserve`,
+      bd:"4 in den Teig, 1 längs halbiert obendrauf, 1 für Trainingstage mit wenig Vorlauf"},
+    {id:"rasp", grp:"Obst", nm:"Himbeeren", pk:packs(g.rasp*d,125,"125-g-Schale"), ex:fmtQ(g.rasp*d,"g"),
+      bd:"Frisch nur 2–3 Tage haltbar → für die zweite Wochenhälfte besser TK-Himbeeren (abends ins Glas, tauen über Nacht auf)"},
+    {id:"skyr", grp:"Kühlregal", nm:"Skyr natur", pk:skyrPacks(skyr), ex:fmtQ(skyr,"g"),
+      bd:`Oats ${skyrOats} g · Brot ${b.skyr} g · mittags ${d} × ${LUNCH_SKYR} g = ${skyrLunch} g`},
+    {id:"milk", grp:"Kühlregal", nm:"Milch", pk:packs(milk,1000,"1-l-Packung"), ex:fmtQ(milk,"ml"),
+      bd:`Oats ${d} × ${g.milk} ml`+(b.milk?` · Brot 2 EL (~${b.milk} ml)`:"")},
+    {id:"eggs", grp:"Kühlregal", nm:"Eier", pk:"1 × 6er-Packung", ex:`${b.eggs} Stück`, bd:"fürs Bananenbrot"},
+    {id:"oats", grp:"Vorrat", nm:"Haferflocken, zart", pk:packs(g.oats*d,500,"500-g-Packung"), ex:fmtQ(g.oats*d,"g"), bd:`${d} × ${g.oats} g`},
+    {id:"chia", grp:"Vorrat", nm:"Chiasamen", pk:packs(g.chia*d,200,"200-g-Beutel"), ex:fmtQ(g.chia*d,"g"), bd:`${d} × ${g.chia} g`},
+    ...(whey?[
+      {id:"wheyS", grp:"Vorrat", nm:"Whey Stracciatella", pk:packs(g.wheyS*d,500,"500-g-Beutel/Dose"), ex:fmtQ(g.wheyS*d,"g"), bd:`${d} × ${g.wheyS} g · Drogerie oder online`},
+      {id:"wheyV", grp:"Vorrat", nm:"Whey Vanille", pk:packs(b.wheyV,500,"500-g-Beutel/Dose"), ex:fmtQ(b.wheyV,"g"), bd:"fürs Bananenbrot"}
+    ]:[]),
+    {id:"flour", grp:"Backen", nm:"Weizenmehl (Type 405)", pk:"1 × 1-kg-Packung", ex:fmtQ(b.flour,"g"), bd:whey?"40 g + 30 g Whey statt 70 g Mehl":"fürs Bananenbrot"},
+    {id:"choc", grp:"Süßes", nm:"Zartbitterschokolade", pk:packs(choc,100,"100-g-Tafel"), ex:fmtQ(choc,"g"),
+      bd:`Oats-Topping ${d} × ${g.choc} g · Brot ${b.choc} g (oder Choco Chunks)`},
+    {id:"cocoa", grp:"Vorrat prüfen", nm:"Backkakao, ungesüßt", pk:"1 Dose", ex:fmtQ(cocoa,"g"), bd:`Oats ${d} × ${g.cocoa} g · Brot ${b.cocoa} g`},
+    {id:"honey", grp:"Vorrat prüfen", nm:"Honig", pk:"1 Glas", ex:fmtQ(g.honey*d,"g"), bd:`${d} × ${g.honey} g`},
+    {id:"bp", grp:"Vorrat prüfen", nm:"Backpulver", pk:"1 Päckchen", ex:"1 TL", bd:"fürs Bananenbrot"},
+    {id:"cin", grp:"Vorrat prüfen", nm:"Zimt", pk:"1 Dose", ex:"1 TL", bd:"fürs Bananenbrot"}
+  ];
+  return items;
+}
+const GROUPS=[["Obst","🍌 Obst"],["Kühlregal","🥛 Kühlregal"],["Vorrat","🌾 Vorrat"],["Backen","🧁 Backen"],["Süßes","🍫 Süßes"],["Vorrat prüfen","🏠 Vorrat prüfen (meist schon zuhause)"]];
+
+function renderList(){
+  const items=buildList();
+  let h="", done=0;
+  for(const [gk,gt] of GROUPS){
+    const its=items.filter(i=>i.grp===gk);
+    if(!its.length) continue;
+    h+=`<div class="grpttl${gk==="Vorrat prüfen"?" check":""}">${gt}</div>`;
+    for(const i of its){
+      const on=!!checked[i.id]; if(on) done++;
+      h+=`<label class="li${on?" done":""}" data-id="${i.id}">
+        <input type="checkbox"${on?" checked":""}><span class="box"></span>
+        <span class="t"><div class="nm">${i.nm}</div>
+        <div class="pk">${i.pk} <small>(${i.ex})</small></div>
+        <div class="bd">${i.bd}</div></span></label>`;
+    }
+  }
+  $("list").innerHTML=h;
+  $("listCnt").textContent=`${done}/${items.length} erledigt`;
+}
+
+// ---- Prep-Ablauf ---------------------------------------------------------
+function renderPrep(){
+  const g=oatsPerGlass(), b=bread();
+  const full=Math.min(days,4), late=Math.max(0,days-4);
+  const glassTxt = late
+    ? `Gläser <b>1–${full}</b> komplett, ${late>1?"Gläser":"Glas"} <b>${full+1}${late>1?"–"+days:""}</b> nur mit den trockenen Zutaten (Deckel drauf, siehe Haltbarkeit)`
+    : `alle <b>${days}</b> Gläser komplett`;
+  const steps=[
+    ["0:00",`Ofen auf <b>200 °C Ober-/Unterhitze</b> vorheizen, Kastenform fetten oder mit Backpapier auslegen.`],
+    ["0:00",`<b>Teig:</b> 4 Bananen zerdrücken, mit 2 Eiern, ${b.skyr} g Skyr, ${b.flour} g Mehl${whey?`, ${b.wheyV} g Whey Vanille, 2 EL Milch`:""}, 1 TL Backpulver und 1 TL Zimt verrühren.`],
+    ["0:08",`Ein <b>Drittel</b> abnehmen. In den Rest ${b.cocoa} g Kakao und ${b.choc} g gehackte Schokolade rühren. Hell/dunkel abwechselnd schichten, einmal mit der Gabel durchziehen, 5. Banane längs halbieren und obendrauf legen.`],
+    ["0:15",`<b>Brot in den Ofen</b> – Timer auf <b>${b.bake} min</b>${whey?" (mit Whey 3–5 min kürzer als normal)":""}.`],
+    ["0:15",`<b>Während das Brot backt – Gläser füllen:</b> ${days} Gläser auf die Waage, je ${g.oats} g Hafer, ${g.chia} g Chia, ${g.cocoa} g Kakao${whey?`, ${g.wheyS} g Whey`:""}. Dann ${g.skyrIn} g Skyr, ${g.honey} g Honig, ${g.milk} ml Milch dazu, gut verrühren (Chia klumpt sonst). ${glassTxt}.`],
+    ["0:30",`<b>Toppings vorbereiten:</b> ${g.choc*days} g Schokolade hacken und in eine kleine Dose. Skyr (${g.skyrTop} g/Tag) und Himbeeren (${g.rasp} g/Tag) kommen erst morgens drauf.`],
+    ["0:35",`Optional: Mittags-Skyr in ${days} Dosen à ${LUNCH_SKYR} g portionieren – dann musst du morgens nur greifen.`],
+    ["0:40",`<b>Stäbchenprobe</b> – kommt es sauber raus, Brot raus. 10 min in der Form, dann auf dem Gitter <b>vollständig auskühlen</b> (~1 h).`],
+    ["~2:00",`In <b>${b.slices} Scheiben</b> schneiden, in eine Dose, ab in den Kühlschrank. Fertig. ✅`]
+  ];
+  $("prep").innerHTML=steps.map(([t,s],i)=>`<div class="step"><div class="n${i>=7?" later":""}">${t}</div><div class="b">${s}</div></div>`).join("");
+}
+
+// ---- Haltbarkeit -----------------------------------------------------------
+function renderShelf(){
+  const late=Math.max(0,days-4);
+  let h=`<p class="how"><b>Overnight Oats mit Chia &amp; Skyr</b> halten im Kühlschrank etwa <b>4 Tage</b>. Tag 5 ist bei frisch geöffnetem Skyr und sauberem, gut verschlossenem Glas oft noch okay, aber grenzwertig: Konsistenz wird breiig, Milchprodukte werden säuerlich. Deshalb lieber nicht riskieren.</p>`;
+  if(late){
+    h+=`<div class="warn gold">👉 <b>Einfache Lösung:</b> ${late>1?"Gläser":"Glas"} ${4+1}${late>1?"–"+days:""} am Sonntag <b>nur trocken</b> befüllen (Hafer, Chia, Kakao${whey?", Whey":""}) – das hält problemlos. <b>Mittwochabend</b> Skyr, Honig und Milch dazu, umrühren, fertig (2 Minuten). Dann ist kein Glas älter als ${days-3} Tage.</div>`;
+  } else {
+    h+=`<div class="warn ok">✓ Bei ${days} Tag${days>1?"en":""} kannst du alle Gläser am Sonntag komplett füllen.</div>`;
+  }
+  h+=`<p class="how"><b>Bananenbrot</b> hält gut verschlossen im Kühlschrank <b>4–5 Tage</b> – reicht für Mo–Fr. Wird es Freitag zu trocken: Scheibe kurz toasten. Ab Tag 6 Scheiben einfrieren (Gefrierbeutel, einzeln entnehmen, 20 min auftauen).</p>`;
+  h+=`<p class="how"><b>Toppings:</b> frische Himbeeren nur 2–3 Tage → ab Mittwoch TK-Himbeeren. Geöffneter Skyr hält ca. 3–5 Tage; den ältesten Becher zuerst aufbrauchen.</p>`;
+  $("shelf").innerHTML=h;
+}
+
+// ---- Tagesplan -----------------------------------------------------------
+function renderPlan(){
+  const g=oatsPerGlass(), b=bread();
+  let h=`<div class="day"><div class="w">Zuhause</div><div>1 Glas Overnight Oats + ${g.skyrTop} g Skyr, ${g.rasp} g Himbeeren, ${g.choc} g Schokolade obendrauf<div class="muted">≈ ${g.protein} g Protein pro Glas</div></div></div>`;
+  h+=`<div class="day"><div class="w">Arbeit 12:00</div><div>2 Scheiben Bananenbrot + ${LUNCH_SKYR} g Skyr<div class="muted">Das Brot allein hat zu wenig Protein – der Skyr gleicht das aus.</div></div></div>`;
+  h+=`<div class="day"><div class="w">Vor dem Training</div><div>Die 2 Scheiben mit <b>90–120 min</b> Vorlauf essen. Bei weniger Zeit nur <b>1 Scheibe + Banane</b>.</div></div>`;
+  if(days>5) h+=`<div class="warn bad">⚠️ 1 Form = ${b.slices} Scheiben = 5 Tage à 2 Scheiben. Für ${days} Tage reicht ein Brot nicht – zweite Form backen oder an den Extra-Tagen etwas anderes einplanen.</div>`;
+  $("plan").innerHTML=h;
+}
+
+// ---- Rezepte ---------------------------------------------------------------
+function renderRecipes(){
+  const g=oatsPerGlass(), b=bread();
+  const row=(q,t)=>`<div class="q">${q}</div><div>${t}</div>`;
+  $("recOats").innerHTML=`<div class="rec">
+    ${row(g.oats+" g","zarte Haferflocken")}
+    ${row(g.chia+" g","Chiasamen")}
+    ${row(g.cocoa+" g","Backkakao, ungesüßt")}
+    ${whey?row(g.wheyS+" g","Whey Stracciatella"):""}
+    ${row(g.skyrIn+" g","Skyr (ins Glas)")}
+    ${row(g.honey+" g","Honig")}
+    ${row(g.milk+" ml","Milch"+(whey?" (100 + 40 wegen Whey)":""))}
+    ${row(g.skyrTop+" g","Skyr – Topping, morgens")}
+    ${row(g.rasp+" g","Himbeeren – Topping, morgens")}
+    ${row(g.choc+" g","Zartbitterschokolade, gehackt – Topping, morgens")}
+  </div>
+  <span class="pill hl">Protein <b>≈ ${g.protein} g</b></span><span class="pill">${days} Gläser</span>
+  <p class="how">Hafer, Chia, Kakao${whey?", Whey":""} ins Glas, ${g.skyrIn} g Skyr, Honig und Milch dazu, verrühren, Kühlschrank. Topping (Skyr, Himbeeren, Schokolade) erst morgens.</p>`;
+  $("recBread").innerHTML=`<div class="rec">
+    ${row("5","reife Bananen (4 in den Teig, 1 längs halbiert obendrauf)")}
+    ${row("2","Eier")}
+    ${row(b.skyr+" g","Skyr")}
+    ${row(b.flour+" g","Mehl"+(whey?" (statt 70 g)":""))}
+    ${whey?row(b.wheyV+" g","Whey Vanille"):""}
+    ${whey?row("2 EL","Milch extra (wegen Whey)"):""}
+    ${row("1 TL","Backpulver")}
+    ${row("1 TL","Zimt")}
+    ${row(b.cocoa+" g","Backkakao")}
+    ${row(b.choc+" g","Zartbitterschokolade / Choco Chunks")}
+  </div>
+  <span class="pill hl">Backzeit <b>${b.bake} min</b></span><span class="pill">200 °C O/U</span>
+  <p class="how">Bananen zerdrücken, mit Eiern, Skyr, Mehl${whey?", Whey, Milch":""}, Backpulver und Zimt verrühren. Ein Drittel abnehmen, in den Rest Kakao und Schoko einrühren. Abwechselnd in die Form schichten, einmal durchziehen, mit Bananenhälften toppen. ${b.bake} min backen. Abkühlen, schneiden, in einer Dose in den Kühlschrank.</p>`;
+}
+
+// ---- State -----------------------------------------------------------------
+function save(){
+  try{ localStorage.setItem(KEY,JSON.stringify({whey,days,checked})); }catch(e){}
+}
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY)); if(!s) return;
+    if(typeof s.whey==="boolean") whey=s.whey;
+    if(s.days>=1 && s.days<=7) days=s.days;
+    if(s.checked && typeof s.checked==="object") checked=s.checked;
+  }catch(e){}
+}
+function renderAll(){
+  document.querySelectorAll("#segWhey button").forEach(b=>b.classList.toggle("on",(b.dataset.v==="1")===whey));
+  $("daysVal").textContent=days+(days===1?" Tag":" Tage");
+  $("dMinus").disabled=days<=1; $("dPlus").disabled=days>=7;
+  renderList(); renderPrep(); renderShelf(); renderPlan(); renderRecipes();
+}
+
+$("segWhey").addEventListener("click",e=>{ if(e.target.dataset.v){ whey=e.target.dataset.v==="1"; renderAll(); save(); }});
+$("dMinus").addEventListener("click",()=>{ if(days>1){ days--; renderAll(); save(); }});
+$("dPlus").addEventListener("click",()=>{ if(days<7){ days++; renderAll(); save(); }});
+$("list").addEventListener("click",e=>{
+  const li=e.target.closest(".li"); if(!li) return;
+  e.preventDefault();               // Label-Klick nicht doppelt auslösen
+  const id=li.dataset.id;
+  if(checked[id]) delete checked[id]; else checked[id]=true;
+  renderList(); save();
+});
+$("btnReset").addEventListener("click",()=>{ checked={}; renderList(); save(); });
+
+load(); renderAll();
+</script>
+</body>
+</html>
