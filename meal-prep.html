@@ -100,6 +100,27 @@
 
   .foot{text-align:center;color:var(--muted);font-size:.74rem;margin-top:26px;line-height:1.7}
   .foot a{color:var(--accent2)}
+  /* Weitere Rezepte */
+  .blk{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.blk{grid-template-columns:1fr}}
+  .blk > div{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:.84rem}
+  .blk b.h{display:block;color:var(--gold);font-size:.9rem;margin-bottom:4px}
+  .blk ul{margin:6px 0 0 18px;color:var(--txt)}
+  .blk p{color:var(--muted);margin-top:6px}
+  .rc{display:grid;grid-template-columns:130px 1fr;gap:14px;align-items:start}
+  @media(max-width:480px){.rc{grid-template-columns:100px 1fr}}
+  .rc img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+  .rc .src{font-size:.74rem;color:var(--muted);margin-top:2px}
+  .rc .src a{color:var(--accent2)}
+  .tag{display:inline-block;font-size:.7rem;font-weight:700;border-radius:999px;padding:3px 10px;margin:8px 6px 0 0}
+  .tag.a{background:rgba(232,85,45,.15);color:var(--accent);border:1px solid rgba(232,85,45,.4)}
+  .tag.b{background:rgba(123,191,106,.12);color:var(--green);border:1px solid rgba(123,191,106,.35)}
+  .tag.o{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
+  .tag.n{background:rgba(232,196,104,.1);color:var(--gold);border:1px solid rgba(232,196,104,.35)}
+  .rc .rec{margin-top:12px;font-size:.84rem}
+  .rc .how{font-size:.82rem}
+  .keep{font-size:.78rem;margin-top:10px;padding:8px 10px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+  .keep b{color:var(--txt)}
 </style>
 </head>
 <body>
@@ -157,7 +178,12 @@
 
   <!-- REZEPTE -->
   <div class="card">
-    <h2>① Schoko Overnight Oats <span class="cnt">pro Glas</span></h2>
+    <div class="rc" style="margin-bottom:14px">
+      <a href="https://www.instagram.com/reel/C-Alb5KsBwA/" target="_blank" rel="noopener"><img src="img/schoko-oats.jpg" alt="Schoko Overnight Oats" loading="lazy"></a>
+      <div><h2 style="margin-bottom:0">① Schoko Overnight Oats <span class="cnt">pro Glas</span></h2>
+      <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/C-Alb5KsBwA/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
+      <span class="tag o">✓ Originalrezept</span><span class="tag b">passt in jede Runde</span></div>
+    </div>
     <div id="recOats"></div>
   </div>
 
@@ -166,6 +192,83 @@
     <div id="recBread"></div>
   </div>
 
+
+  <!-- WEITERE REZEPTE -->
+  <div class="card" id="mehr">
+    <h2>🔁 Abwechslung: 2 Prep-Runden à 3 Tage</h2>
+    <p class="how" style="margin-top:0">Statt 5× dasselbe Glas: <b>zwei kleine Prep-Runden</b>. Dann ist nichts älter als 3 Tage – das löst auch das Haltbarkeitsproblem von Tag 5.</p>
+    <div class="blk">
+      <div><b class="h">🔴 Tag 1–3 (Sonntag preppen)</b>
+        <ul><li>Choc Banana Bread Oats</li><li>Lemon Berry Breakfast-Pots</li></ul>
+        <p>Alles mit Bananenscheiben oder fertig geschichteten Beeren + Joghurt wird nach 3 Tagen braun bzw. matschig → zuerst essen.</p></div>
+      <div><b class="h">🟢 Tag 4–6 (Mittwochabend preppen)</b>
+        <ul><li>Bueno Overnight Oats</li><li>Cookie Dough Overnight Oats</li><li>Schoko Overnight Oats (oben)</li></ul>
+        <p>Kein frisches Obst im Glas (Topping erst morgens), die Bueno-Schokodecke versiegelt sogar → verzeiht Wartezeit, ideal für die zweite Runde.</p></div>
+    </div>
+    <p class="hint" style="margin-top:10px">Bei „nachgebaut" verschickt die Erstellerin das Rezept nur per DM. Die Mengen hier sind aus Video-Bild, Beschreibung und ihrem Grundrezept (Schoko Oats) abgeleitet – schmeckt, ist aber nicht 1:1 ihr Original.</p>
+  </div>
+
+  <div class="card">
+    <div class="rc">
+      <a href="https://www.instagram.com/reel/DbvKN5nM45R/" target="_blank" rel="noopener"><img src="img/banana-bread-oats.jpg" alt="Choc Banana Bread Oats" loading="lazy"></a>
+      <div>
+        <h2 style="margin-bottom:0">Choc Banana Bread Oats</h2>
+        <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/DbvKN5nM45R/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
+        <span class="tag a">Tag 1–3 · Sonntag preppen</span><span class="tag n">≈ nachgebaut – Original nur per DM</span>
+      </div>
+    </div>
+    <div class="rc" style="display:block">
+      <div class="rec"><div class="rec"><div class="q">45 g</div><div>zarte Haferflocken</div><div class="q">10 g</div><div>Chiasamen</div><div class="q">5 g</div><div>Backkakao</div><div class="q">½ TL</div><div>Zimt</div><div class="q">½</div><div>reife Banane, zerdrückt (ersetzt den Honig)</div><div class="q">50 g</div><div>Skyr</div><div class="q">100 ml</div><div>Milch</div><div class="q">½</div><div>Banane in Scheiben, mit Zimt kurz in der Pfanne karamellisiert</div><div class="q">Topping</div><div>40 g Skyr, 10 g Zartbitter gehackt, ein paar Walnüsse</div></div></div>
+      <p class="how">Bananenscheiben in einer beschichteten Pfanne mit etwas Zimt 1–2 min pro Seite karamellisieren, abkühlen lassen und an die Glaswand drücken. Restliche Zutaten verrühren, einfüllen, Kühlschrank. Laut Reel ≈ <b>22 g Protein, 11 g Ballaststoffe</b> pro Glas. Mit 25 g Whey (+40 ml Milch) deutlich mehr.</p>
+      <div class="keep">🧊 <b>Max. 3 Tage.</b> Die Bananenscheiben werden danach dunkel und weich → Runde 1.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="rc">
+      <a href="https://www.instagram.com/reel/DYwRscRMKdi/" target="_blank" rel="noopener"><img src="img/lemon-berry-pots.jpg" alt="Lemon Berry Breakfast-Cake-Pots" loading="lazy"></a>
+      <div>
+        <h2 style="margin-bottom:0">Lemon Berry Breakfast-Cake-Pots</h2>
+        <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/DYwRscRMKdi/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
+        <span class="tag a">Tag 1–3 · Sonntag preppen</span><span class="tag n">≈ nachgebaut – Original nur per DM</span>
+      </div>
+    </div>
+    <div class="rc" style="display:block">
+      <div class="rec"><div class="rec"><div class="q"></div><div><b>Zitronen-Hafer-Kuchen</b> (Blech/Form, reicht für 4 Pots):</div><div class="q">160 g</div><div>Haferflocken, gemahlen</div><div class="q">2</div><div>Eier</div><div class="q">150 g</div><div>Skyr</div><div class="q">30 g</div><div>Honig</div><div class="q">1</div><div>Bio-Zitrone: Abrieb + 2 EL Saft</div><div class="q">1 TL</div><div>Backpulver</div><div class="q">80 g</div><div>Blaubeeren</div><div class="q"></div><div><b>Himbeer-Chia-Jam:</b> 200 g TK-Himbeeren aufkochen, 1 EL Chia + 1 TL Honig einrühren, 10 min quellen</div><div class="q"></div><div><b>Schicht-Creme:</b> 300 g Skyr + Zitronenabrieb + 1 EL Honig</div><div class="q">Topping</div><div>Blaubeeren</div></div></div>
+      <p class="how">Kuchenteig verrühren, in eine kleine Form, <b>180 °C ca. 20–25 min</b> backen, abkühlen, in Stücke brechen. Im Glas schichten: Kuchen → Jam → Zitronen-Skyr → Kuchen → Jam → Skyr → Blaubeeren. Passt prima neben das Bananenbrot in den Ofen.</p>
+      <div class="keep">🧊 <b>Geschichtet max. 3 Tage</b>, danach weicht der Kuchen durch. Tipp: Kuchen &amp; Jam halten getrennt 5 Tage – dann nur Schichten am Mittwoch.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="rc">
+      <a href="https://www.instagram.com/reel/DceOJSCsuks/" target="_blank" rel="noopener"><img src="img/bueno-oats.jpg" alt="Bueno Overnight Oats" loading="lazy"></a>
+      <div>
+        <h2 style="margin-bottom:0">Bueno Overnight Oats</h2>
+        <div class="src">von <b>marenmorereal</b> · <a href="https://www.instagram.com/reel/DceOJSCsuks/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
+        <span class="tag b">Tag 4–6 · Mittwochabend preppen</span><span class="tag o">✓ Originalrezept</span>
+      </div>
+    </div>
+    <div class="rc" style="display:block">
+      <div class="rec"><div class="rec"><div class="q">60 g</div><div>Hafermehl (oder zarte Haferflocken, fein gemixt)</div><div class="q">½ EL</div><div>Chiasamen</div><div class="q">1 EL</div><div>gemahlene Haselnüsse</div><div class="q">1–1½ EL</div><div>Agavendicksaft</div><div class="q">50 g</div><div>Joghurt nach Wahl (→ Skyr für mehr Protein)</div><div class="q">nach Gefühl</div><div>Milch (ca. 100 ml)</div><div class="q">optional</div><div>1 EL Proteinpulver</div><div class="q">Topping</div><div>1 EL Haselnussmus, Schokolade geschmolzen + ⅓ TL Kokosöl, 1 Stück Kinder Bueno</div></div></div>
+      <p class="how">Alle Basiszutaten verrühren, ins Glas. Mit Haselnussmus bestreichen, geschmolzene Schokolade mit Kokosöl drübergießen (wird im Kühlschrank zur knackigen Decke), ein Stück Bueno drauf. Mindestens 1 h, besser über Nacht ziehen lassen. Original kostet <b>unter 2 €</b> pro Portion.</p>
+      <div class="keep">🧊 <b>3–4 Tage.</b> Kein frisches Obst, die Schokodecke versiegelt das Glas → ideal für Runde 2. Protein ohne Skyr/Whey eher niedrig (~12 g).</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="rc">
+      <a href="https://www.instagram.com/reel/Dcskhzxs3Ms/" target="_blank" rel="noopener"><img src="img/cookie-dough-oats.jpg" alt="Cookie Dough Overnight Oats" loading="lazy"></a>
+      <div>
+        <h2 style="margin-bottom:0">Cookie Dough Overnight Oats</h2>
+        <div class="src">von <b>_emilysworld</b> · <a href="https://www.instagram.com/reel/Dcskhzxs3Ms/" target="_blank" rel="noopener">Reel ansehen ↗</a></div>
+        <span class="tag b">Tag 4–6 · Mittwochabend preppen</span><span class="tag n">≈ nachgebaut – Original nur per DM</span>
+      </div>
+    </div>
+    <div class="rc" style="display:block">
+      <div class="rec"><div class="rec"><div class="q">45 g</div><div>zarte Haferflocken</div><div class="q">10 g</div><div>Chiasamen</div><div class="q">25 g</div><div>Whey Vanille</div><div class="q">15 g</div><div>Erdnussmus</div><div class="q">1 Prise</div><div>Salz + etwas Vanille</div><div class="q">50 g</div><div>Skyr</div><div class="q">10 g</div><div>Honig oder Ahornsirup</div><div class="q">140 ml</div><div>Milch</div><div class="q">10 g</div><div>Schoko-Drops, untergerührt</div><div class="q">Topping</div><div>40 g Skyr, 60 g Erdbeeren, 10 g Zartbitter gehackt – erst morgens</div></div></div>
+      <p class="how">Alles außer Topping verrühren, Schoko-Drops unterheben, ins Glas, Kühlschrank. Morgens Skyr, Erdbeeren und Schokolade drauf. Laut Reel <b>≈ 28 g Protein</b> (sie nutzt Proteinpulver + Erdnussmus).</p>
+      <div class="keep">🧊 <b>3–4 Tage.</b> Erdbeeren erst morgens dazu, dann hält die Basis gut → Runde 2.</div>
+    </div>
+  </div>
+  <p class="hint" style="text-align:center;margin-top:14px">Mehr von <b>_emilysworld</b>: laut ihren Posts gibt es die Breakfast-Cake-Pots auch als <b>„Choc Brownie“</b> und <b>„Mix &amp; Match“</b>, jeden Montag kommt ein neues Frühstücksrezept. Ihr Profil zeigt Instagram nur eingeloggt – schick mir gern weitere Links.</p>
   <div class="foot">
     Rezepte: Schoko Overnight Oats von <b>_emilysworld</b> · Marmor-Bananenbrot von <b>pia_nutrition</b>.<br>
     Packungsgrößen = typische Größen im deutschen Supermarkt, exakte Menge in Klammern. 🥣
