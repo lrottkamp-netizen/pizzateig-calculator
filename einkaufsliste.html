@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1410">
+<title>🛒 Einkaufsliste · Frühstück 6 Tage</title>
+<style>
+  :root{
+    --bg:#1a1410; --card:#241c16; --card2:#2e241c; --line:#3d3026;
+    --txt:#f3e9dd; --muted:#b09a85; --accent:#e8552d; --accent2:#f0a04b;
+    --green:#7bbf6a; --gold:#e8c468; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#2a1f17,#1a1410);
+    color:var(--txt);line-height:1.45;padding:20px 16px 48px;min-height:100vh;
+  }
+  .wrap{max-width:560px;margin:0 auto}
+  .back{color:var(--muted);font-size:.8rem;text-decoration:none}
+  h1{font-size:1.45rem;margin-top:8px}
+  h1 .em{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.85rem;margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:14px}
+  .card h2{font-size:.76rem;text-transform:uppercase;letter-spacing:1.3px;color:var(--accent2);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+  .card h2 span{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+  .plan{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.84rem}
+  .plan b{color:var(--gold)}
+  .grp{font-size:.74rem;color:var(--gold);font-weight:700;margin:10px 0 2px}
+  .li{display:flex;gap:10px;align-items:center;padding:8px 4px;border-top:1px solid var(--line);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  .grp + .li{border-top:none}
+  .box{flex:0 0 20px;height:20px;border-radius:6px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff}
+  .nm{flex:1;font-size:.9rem}
+  .nm small{color:var(--muted);font-size:.72rem}
+  .pk{font-size:.84rem;color:var(--accent2);font-weight:600;text-align:right;white-space:nowrap}
+  .pk small{display:block;color:var(--muted);font-weight:400;font-size:.7rem}
+  .li.done .box{background:var(--green);border-color:var(--green)}
+  .li.done .box::after{content:"✓"}
+  .li.done .nm,.li.done .pk{opacity:.4;text-decoration:line-through}
+  .hint{font-size:.74rem;color:var(--muted);margin-top:8px}
+  button{display:block;margin:16px auto 0;background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:8px 16px;border-radius:9px;font-size:.84rem;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="meal-prep.html">← Meal Prep Frühstück</a>
+  <h1>🛒 Einkaufs<span class="em">liste</span></h1>
+  <div class="sub">6 Tage Frühstück · 2 Prep-Runden · je 1 Glas pro Tag</div>
+
+  <div class="card">
+    <h2>📅 Plan</h2>
+    <div class="plan">
+      <b>Mo</b><span>Choc Banana Bread Oats</span>
+      <b>Di</b><span>Lemon Berry Pot</span>
+      <b>Mi</b><span>Lemon Berry Pot</span>
+      <b>Do</b><span>Bueno Overnight Oats</span>
+      <b>Fr</b><span>Cookie Dough Oats</span>
+      <b>Sa</b><span>Schoko Overnight Oats</span>
+    </div>
+    <div class="hint">Runde 1 (Mo–Mi) am Sonntag preppen, Runde 2 (Do–Sa) am Mittwochabend. Lemon-Kuchen als halbes Rezept (2 Pots).</div>
+  </div>
+
+  <div class="card">
+    <h2>Sonntag kaufen <span id="c1"></span></h2>
+    <div id="l1"></div>
+  </div>
+
+  <div class="card">
+    <h2>Mittwoch frisch nachkaufen <span id="c2"></span></h2>
+    <div id="l2"></div>
+  </div>
+
+  <div class="card">
+    <h2>🏠 Vorrat prüfen <span id="c3"></span></h2>
+    <div id="l3"></div>
+  </div>
+
+  <button id="reset">↺ Haken zurücksetzen</button>
+  <div class="hint" style="text-align:center">Bananenbrot und Mittags-Skyr stehen auf der großen Liste unter Meal Prep.</div>
+</div>
+
+<script>
+const KEY="einkaufslisteFruehstueck6";
+// [id, Gruppe, Name, Packung, exakte Menge]
+const LISTS={
+  l1:[
+    ["ban","🍌 Obst","Banane, reif","1 Stück","Banana Bread Oats"],
+    ["zit","🍌 Obst","Bio-Zitrone","1 Stück","Lemon Pots"],
+    ["blau","🍌 Obst","Blaubeeren","1 × 125-g-Schale","80 g"],
+    ["him","❄️ Tiefkühl","Himbeeren TK","1 × 300-g-Beutel","160 g · Jam + Schoko Oats"],
+    ["skyr1","🥛 Kühlregal","Skyr natur","1 × 450-g-Becher","315 g · Runde 1"],
+    ["milch","🥛 Kühlregal","Milch (H-Milch hält bis Mi)","1 × 1-l-Packung","480 ml"],
+    ["ei","🥛 Kühlregal","Eier","1 × 6er-Packung","1 Stück"],
+    ["hafer","🌾 Vorrat","Haferflocken, zart","1 × 500-g-Packung","275 g"],
+    ["chia","🌾 Vorrat","Chiasamen","1 × 200-g-Beutel","42 g"],
+    ["wal","🌾 Vorrat","Walnüsse","1 × 100-g-Beutel","10 g"],
+    ["hasel","🌾 Vorrat","Haselnüsse, gemahlen","1 × 100-g-Packung","1 EL"],
+    ["emus","🌾 Vorrat","Erdnussmus","1 Glas","15 g"],
+    ["hmus","🌾 Vorrat","Haselnussmus","1 Glas","15 g"],
+    ["wv","🌾 Vorrat","Whey Vanille","1 Beutel/Dose","25 g"],
+    ["ws","🌾 Vorrat","Whey Stracciatella","1 Beutel/Dose","25 g"],
+    ["zb","🍫 Süßes","Zartbitterschokolade","1 × 100-g-Tafel","70 g · gehackt statt Drops"],
+    ["bueno","🍫 Süßes","Kinder Bueno","1 Packung (2 Riegel)","1 Stück"]
+  ],
+  l2:[
+    ["skyr2","🥛 Kühlregal","Skyr natur","1 × 450-g-Becher","230 g · Runde 2"],
+    ["erd","🍌 Obst","Erdbeeren","1 × 250-g-Schale","60 g · Cookie Dough"]
+  ],
+  l3:[
+    ["kak","","Backkakao","—","10 g"],
+    ["hon","","Honig (oder Agavendicksaft)","—","~70 g"],
+    ["zimt","","Zimt","—","½ TL"],
+    ["bp","","Backpulver","—","½ TL"],
+    ["kok","","Kokosöl","—","⅓ TL"],
+    ["van","","Vanille + Salz","—","je 1 Prise"]
+  ]
+};
+let checked={};
+try{ checked=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(checked)); }catch(e){} }
+function render(){
+  ["l1","l2","l3"].forEach((l,i)=>{
+    let h="", last=null, done=0;
+    for(const [id,g,nm,pk,ex] of LISTS[l]){
+      if(g && g!==last){ h+=`<div class="grp">${g}</div>`; last=g; }
+      const on=!!checked[id]; if(on) done++;
+      h+=`<div class="li${on?" done":""}" data-id="${id}"><span class="box"></span><span class="nm">${nm}</span><span class="pk">${pk==="—"?ex:pk}${pk==="—"?"":`<small>(${ex})</small>`}</span></div>`;
+    }
+    document.getElementById(l).innerHTML=h;
+    document.getElementById("c"+(i+1)).textContent=`${done}/${LISTS[l].length}`;
+  });
+}
+document.addEventListener("click",e=>{
+  const li=e.target.closest(".li"); if(!li) return;
+  const id=li.dataset.id; if(checked[id]) delete checked[id]; else checked[id]=true;
+  save(); render();
+});
+document.getElementById("reset").addEventListener("click",()=>{ checked={}; save(); render(); });
+render();
+</script>
+</body>
+</html>
