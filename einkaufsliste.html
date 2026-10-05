@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1410">
+<title>🛒 Einkaufsliste · 3 Gläser</title>
+<style>
+  :root{
+    --bg:#1a1410; --card:#241c16; --card2:#2e241c; --line:#3d3026;
+    --txt:#f3e9dd; --muted:#b09a85; --accent:#e8552d; --accent2:#f0a04b;
+    --green:#7bbf6a; --gold:#e8c468; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#2a1f17,#1a1410);
+    color:var(--txt);line-height:1.45;padding:20px 16px 48px;min-height:100vh;
+  }
+  .wrap{max-width:560px;margin:0 auto}
+  .back{color:var(--muted);font-size:.8rem;text-decoration:none}
+  h1{font-size:1.45rem;margin-top:8px}
+  h1 .em{color:var(--accent2)}
+  .sub{color:var(--muted);font-size:.85rem;margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-top:14px}
+  .card h2{font-size:.76rem;text-transform:uppercase;letter-spacing:1.3px;color:var(--accent2);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+  .card h2 span{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+  .plan{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.84rem}
+  .plan b{color:var(--gold)}
+  .plan a{color:var(--txt);text-decoration:none;border-bottom:1px dotted var(--muted)}
+  .grp{font-size:.74rem;color:var(--gold);font-weight:700;margin:10px 0 2px}
+  .li{display:flex;gap:10px;align-items:center;padding:8px 4px;border-top:1px solid var(--line);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  .grp + .li{border-top:none}
+  .box{flex:0 0 20px;height:20px;border-radius:6px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff}
+  .nm{flex:1;font-size:.9rem}
+  .nm small{color:var(--muted);font-size:.72rem}
+  .pk{font-size:.84rem;color:var(--accent2);font-weight:600;text-align:right;white-space:nowrap}
+  .pk small{display:block;color:var(--muted);font-weight:400;font-size:.7rem}
+  .li.done .box{background:var(--green);border-color:var(--green)}
+  .li.done .box::after{content:"✓"}
+  .li.done .nm,.li.done .pk{opacity:.4;text-decoration:line-through}
+  .hint{font-size:.74rem;color:var(--muted);margin-top:8px}
+  button{display:block;margin:16px auto 0;background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:8px 16px;border-radius:9px;font-size:.84rem;cursor:pointer}
+  .tabs{display:flex;gap:4px;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px;margin:12px 0 0}
+  .tabs a{flex:1;text-align:center;padding:8px 6px;border-radius:999px;font-size:.82rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .tabs a.on{background:var(--accent);color:#fff}
+  .hint b{color:var(--txt)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="meal-prep.html">← Meal Prep Frühstück</a>
+  <h1>🛒 Einkaufs<span class="em">liste</span></h1>
+  <div class="sub">3 Gläser zum Ausprobieren · alles am Sonntag preppen · Produkte von REWE</div>
+  <nav class="tabs"><a href="meal-prep.html">📋 Plan &amp; Prep</a><a href="rezepte.html">📖 Rezepte</a><a href="einkaufsliste.html" class="on">🛒 Einkauf</a></nav>
+
+  <div class="card">
+    <h2>📅 Plan</h2>
+    <div class="plan">
+      <b>Mo</b><a href="rezepte.html#banana">🍌 Choc Banana Bread Oats</a>
+      <b>Di</b><a href="rezepte.html#schoko">🍐 Schoko-Birne Oats</a>
+      <b>Mi</b><a href="rezepte.html#cookie">🍎 Apfel-Zimt Cookie Dough Oats</a>
+    </div>
+    <div class="hint">Je 1 Glas, alle 3 am Sonntag preppen – keins ist älter als 3 Tage. Banana Bread zuerst, weil die Banane am schnellsten dunkel wird.</div>
+    <div class="hint">🍂 <b>Oktober:</b> Beeren haben keine Saison mehr → TK-Beerenmix (reif gepflückt, günstiger). Frisch &amp; regional: Äpfel, Birnen, Trauben, Zwetschgen.</div>
+  </div>
+
+  <div class="card">
+    <h2>Sonntag kaufen <span id="c1"></span></h2>
+    <div id="l1"></div>
+  </div>
+
+  <div class="card">
+    <h2>🫐 Bananenbrot (mittags) <span id="c2"></span></h2>
+    <div id="l2"></div>
+    <div class="hint"><a href="rezepte.html#brot" style="color:var(--accent2)">Blaubeer-Schoko-Bananenbrot: Rezept &amp; Schritte →</a> · Schoko, Milch &amp; Proteinpulver dafür sind oben schon mitgerechnet.</div>
+  </div>
+
+  <div class="card">
+    <h2>🏠 Zuhause <span id="c3"></span></h2>
+    <div id="l3"></div>
+  </div>
+
+  <div class="card"><h2>💶 Kosten (REWE)</h2><div class="hint" id="sum" style="margin-top:0"></div>
+</div>
+
+  <button id="reset">↺ Haken zurücksetzen</button>
+  <div class="hint" style="text-align:center">Bananenbrot und Mittags-Skyr stehen auf der großen Liste unter Meal Prep.</div>
+</div>
+
+<script>
+const KEY="einkaufslisteFruehstueck3";
+// [id, Gruppe, Name, Packung, exakte Menge]
+// [id, Gruppe, Produkt bei REWE, Packung, exakte Menge, Preis € (zuletzt gemeldet, je nach Markt) | null]
+const LISTS={
+  l1:[
+    ["ban","🍌 Obst","Banane, reif","1 Stück","Banana Bread Oats",null],
+    ["birne","🍌 Obst","Birne, regional","1 Stück","½ für Schoko-Birne, Rest Snack",null],
+    ["apfel","🍌 Obst","Apfel, regional","1 Stück","½ für Cookie Dough, Rest Snack",null],
+    ["skyr","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","270 g",1.29],
+    ["milch","🥛 Kühlregal","ja! H-Milch 1,5 %","1 × 1-l-Packung","ca. 480 ml · Gläser 400 + Brot 75",0.85],
+    ["hafer","🌾 Vorrat","ja! Zarte Haferflocken","1 × 500-g-Packung","135 g",0.69],
+    ["chia","🌾 Vorrat","REWE Bio Chia-Samen","1 × 300-g-Beutel","30 g",1.85],
+    ["wal","🌾 Vorrat","ja! Walnusskerne <small>optional</small>","1 × 200-g-Beutel","ein paar · Banana Bread",2.49],
+    ["zb","🍫 Süßes","ja! Zartbitter-Schokolade","1 × 100-g-Tafel","80 g · Gläser 30 g + Brot 50 g",0.89]
+  ],
+  l2:[
+    ["bban","🍌 Obst","Bananen, groß &amp; reif","3 Stück","alle in den Teig",null],
+    ["blue","🍌 Obst","Heidelbeeren (frisch oder TK)","1 × 125-g-Schale","95 g Teig + 30 g oben",2.89],
+    ["eier","🥛 Kühlregal","Eier","1 × 6er-Packung","2 Stück",null],
+    ["mehl","🧁 Backen","Dinkelvollkornmehl","1 × 1-kg-Packung","150 g",null]
+  ],
+  l3:[
+    ["prot","✅ Hast du schon","Proteinpulver","—","100 g (Gläser 50 g + Brot 50 g)",null],
+    ["emus","✅ Hast du schon","Erdnussmus","—","15 g",null],
+    ["kak","🏠 Prüfen","Backkakao","—","10 g",null],
+    ["hon","🏠 Prüfen","Honig","—","20 g",null],
+    ["zimt","🏠 Prüfen","Zimt","—","1 TL",null],
+    ["bp","🏠 Prüfen","Backpulver","—","1 TL",null],
+    ["salz","🏠 Prüfen","Salz","—","1 Prise",null]
+  ]
+};
+const eur=v=>v.toFixed(2).replace(".",",")+" €";
+let checked={};
+try{ checked=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(checked)); }catch(e){} }
+function render(){
+  ["l1","l2","l3"].forEach(l=>{
+    let h="", last=null, done=0;
+    for(const [id,g,nm,pk,ex,pr] of LISTS[l]){
+      if(g && g!==last){ h+=`<div class="grp">${g}</div>`; last=g; }
+      const on=!!checked[id]; if(on) done++;
+      h+=`<div class="li${on?" done":""}" data-id="${id}"><span class="box"></span><span class="nm">${nm}${pr?`<br><small>≈ ${eur(pr)}</small>`:""}</span><span class="pk">${pk==="—"?ex:pk}${pk==="—"?"":`<small>(${ex})</small>`}</span></div>`;
+    }
+    document.getElementById(l).innerHTML=h;
+    document.getElementById(l.replace("l","c")).textContent=`${done}/${LISTS[l].length}`;
+  });
+}
+document.addEventListener("click",e=>{
+  const li=e.target.closest(".li"); if(!li) return;
+  const id=li.dataset.id; if(checked[id]) delete checked[id]; else checked[id]=true;
+  save(); render();
+});
+document.getElementById("reset").addEventListener("click",()=>{ checked={}; save(); render(); });
+render();
+const all=[...LISTS.l1,...LISTS.l2], sum=all.reduce((a,i)=>a+(i[5]||0),0), opt=all.filter(i=>i[2].includes("optional")).reduce((a,i)=>a+(i[5]||0),0);
+document.getElementById("sum").innerHTML=`Grob <b>≈ ${eur(sum)}</b> für die Positionen mit Preis, ohne die optionalen Nüsse <b>≈ ${eur(sum-opt)}</b>. Dazu Bananen, Birne, Apfel, Eier und Dinkelmehl. Preise: zuletzt gemeldete REWE-Preise, je nach Markt anders.`;
+</script>
+</body>
+</html>
