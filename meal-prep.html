@@ -132,7 +132,7 @@
   <header>
     <a class="back" href="index.html">← Pizzateig-Calculator</a>
     <h1>🥣 Meal Prep <span class="em">Frühstück</span></h1>
-    <div class="sub">Overnight Oats + Marmor-Bananenbrot · Sonntag preppen</div>
+    <div class="sub">Overnight Oats + Heidelbeer-Bananenbrot · Sonntag preppen</div>
     <nav class="tabs"><a href="meal-prep.html" class="on">📋 Plan &amp; Prep</a><a href="rezepte.html">📖 Rezepte</a><a href="einkaufsliste.html">🛒 Einkauf</a></nav>
   </header>
 
@@ -199,7 +199,7 @@
   </div>
 
   <div class="card">
-    <h2>② Marmor-Bananenbrot ohne Zucker <span class="cnt">1 Kastenform · ~10 Scheiben</span></h2>
+    <h2>② Heidelbeer-Bananenbrot ohne Zucker <span class="cnt">1 Kastenform · ~10 Scheiben</span></h2>
     <div id="recBread"></div>
   </div>
 
@@ -219,7 +219,7 @@
   </div>
 
   <div class="foot">
-    Rezepte: Schoko Overnight Oats von <b>_emilysworld</b> · Marmor-Bananenbrot von <b>pia_nutrition</b>.<br>
+    Rezepte: Schoko Overnight Oats von <b>_emilysworld</b> · Bananenbrot-Grundrezept von <b>pia_nutrition</b>.<br>
     Packungsgrößen = typische Größen im deutschen Supermarkt, exakte Menge in Klammern. 🥣
   </div>
 </div>
@@ -243,12 +243,12 @@ function oatsPerGlass(){
 // 1 Kastenform Bananenbrot (fix, skaliert nicht mit den Tagen)
 function bread(){
   return {
-    bananas:5, eggs:2, skyr:150,
+    bananas:3, eggs:2, skyr:150, blue:125,
     flour: whey ? 40 : 70,
     wheyV: whey ? 30 : 0,
     milk: whey ? 30 : 0,        // 2 EL ≈ 30 ml
-    cocoa:12, choc:60, slices:10,
-    bake: whey ? "25–27" : "ca. 30"
+    cocoa:0, choc:0, slices:10,
+    bake: whey ? "28–30" : "32–35"
   };
 }
 const LUNCH_SKYR = 150;
@@ -281,8 +281,10 @@ function buildList(){
   const cocoa=g.cocoa*d+b.cocoa;
   const choc=g.choc*d+b.choc;
   const items=[
-    {id:"banana", grp:"Obst", nm:"Bananen, reif", pk:`${b.bananas+1} Stück`, ex:`${b.bananas} fürs Brot + 1 Reserve`,
-      bd:"4 in den Teig, 1 längs halbiert obendrauf, 1 für Trainingstage mit wenig Vorlauf"},
+    {id:"banana", grp:"Obst", nm:"Bananen, groß &amp; reif", pk:`${b.bananas+1} Stück`, ex:`${b.bananas} fürs Brot + 1 Reserve`,
+      bd:"2½ in den Teig, ½ längs halbiert obendrauf, 1 für Trainingstage mit wenig Vorlauf"},
+    {id:"blue", grp:"Obst", nm:"Heidelbeeren", pk:"1 × 125-g-Schale", ex:`${b.blue} g`,
+      bd:"fürs Bananenbrot · im Herbst teuer → TK geht genauso (gefroren unterheben)"},
     {id:"rasp", grp:"Tiefkühl", nm:"Himbeeren TK (z. B. REWE Bio)", pk:packs(g.rasp*d,300,"300-g-Beutel"), ex:fmtQ(g.rasp*d,"g"),
       bd:"Frische Beeren haben jetzt keine Saison – TK ist reif gepflückt und günstiger. Abends aufs Glas, über Nacht auftauen. Alternative: ½ Birne pro Glas"},
     {id:"skyr", grp:"Kühlregal", nm:"Skyr natur", pk:skyrPacks(skyr), ex:fmtQ(skyr,"g"),
@@ -298,8 +300,8 @@ function buildList(){
     ]:[]),
     {id:"flour", grp:"Backen", nm:"Weizenmehl (Type 405)", pk:"1 × 1-kg-Packung", ex:fmtQ(b.flour,"g"), bd:whey?"40 g + 30 g Whey statt 70 g Mehl":"fürs Bananenbrot"},
     {id:"choc", grp:"Süßes", nm:"Zartbitterschokolade", pk:packs(choc,100,"100-g-Tafel"), ex:fmtQ(choc,"g"),
-      bd:`Oats-Topping ${d} × ${g.choc} g · Brot ${b.choc} g (oder Choco Chunks)`},
-    {id:"cocoa", grp:"Vorrat prüfen", nm:"Backkakao, ungesüßt", pk:"1 Dose", ex:fmtQ(cocoa,"g"), bd:`Oats ${d} × ${g.cocoa} g · Brot ${b.cocoa} g`},
+      bd:`Oats-Topping ${d} × ${g.choc} g`},
+    {id:"cocoa", grp:"Vorrat prüfen", nm:"Backkakao, ungesüßt", pk:"1 Dose", ex:fmtQ(cocoa,"g"), bd:`Oats ${d} × ${g.cocoa} g`},
     {id:"honey", grp:"Vorrat prüfen", nm:"Honig", pk:"1 Glas", ex:fmtQ(g.honey*d,"g"), bd:`${d} × ${g.honey} g`},
     {id:"bp", grp:"Vorrat prüfen", nm:"Backpulver", pk:"1 Päckchen", ex:"1 TL", bd:"fürs Bananenbrot"},
     {id:"cin", grp:"Vorrat prüfen", nm:"Zimt", pk:"1 Dose", ex:"1 TL", bd:"fürs Bananenbrot"}
@@ -337,13 +339,13 @@ function renderPrep(){
     : `alle <b>${days}</b> Gläser komplett`;
   const steps=[
     ["0:00",`Ofen auf <b>200 °C Ober-/Unterhitze</b> vorheizen, Kastenform fetten oder mit Backpapier auslegen.`],
-    ["0:00",`<b>Teig:</b> 4 Bananen zerdrücken, mit 2 Eiern, ${b.skyr} g Skyr, ${b.flour} g Mehl${whey?`, ${b.wheyV} g Whey Vanille, 2 EL Milch`:""}, 1 TL Backpulver und 1 TL Zimt verrühren.`],
-    ["0:08",`Ein <b>Drittel</b> abnehmen. In den Rest ${b.cocoa} g Kakao und ${b.choc} g gehackte Schokolade rühren. Hell/dunkel abwechselnd schichten, einmal mit der Gabel durchziehen, 5. Banane längs halbieren und obendrauf legen.`],
-    ["0:15",`<b>Brot in den Ofen</b> – Timer auf <b>${b.bake} min</b>${whey?" (mit Whey 3–5 min kürzer als normal)":""}.`],
+    ["0:00",`<b>Teig:</b> 2½ große Bananen zerdrücken, mit 2 Eiern, ${b.skyr} g Skyr, ${b.flour} g Mehl${whey?`, ${b.wheyV} g Whey Vanille, 2 EL Milch`:""}, 1 TL Backpulver und 1 TL Zimt verrühren.`],
+    ["0:08",`${b.blue} g Heidelbeeren in 1 TL Mehl wälzen (dann sinken sie nicht ab) und <b>vorsichtig unterheben</b>. Teig in die Form, restliche ½ Banane längs halbieren und obendrauf legen.`],
+    ["0:15",`<b>Brot in den Ofen</b> – Timer auf <b>${b.bake} min</b>${whey?" (Heidelbeeren machen den Teig saftiger, deshalb etwas länger)":""}.`],
     ["0:15",`<b>Während das Brot backt – Gläser füllen:</b> ${days} Gläser auf die Waage, je ${g.oats} g Hafer, ${g.chia} g Chia, ${g.cocoa} g Kakao${whey?`, ${g.wheyS} g Whey`:""}. Dann ${g.skyrIn} g Skyr, ${g.honey} g Honig, ${g.milk} ml Milch dazu, gut verrühren (Chia klumpt sonst). ${glassTxt}.`],
     ["0:30",`<b>Toppings vorbereiten:</b> ${g.choc*days} g Schokolade hacken und in eine kleine Dose. Skyr (${g.skyrTop} g/Tag) und Himbeeren (${g.rasp} g/Tag) kommen erst morgens drauf.`],
     ["0:35",`Optional: Mittags-Skyr in ${days} Dosen à ${LUNCH_SKYR} g portionieren – dann musst du morgens nur greifen.`],
-    ["0:40",`<b>Stäbchenprobe</b> – kommt es sauber raus, Brot raus. 10 min in der Form, dann auf dem Gitter <b>vollständig auskühlen</b> (~1 h).`],
+    ["0:40",`<b>Stäbchenprobe</b> an einer Stelle ohne Beere – kommt es sauber raus, Brot raus. 10 min in der Form, dann auf dem Gitter <b>vollständig auskühlen</b> (~1 h).`],
     ["~2:00",`In <b>${b.slices} Scheiben</b> schneiden, in eine Dose, ab in den Kühlschrank. Fertig. ✅`]
   ];
   $("prep").innerHTML=steps.map(([t,s],i)=>`<div class="step"><div class="n${i>=7?" later":""}">${t}</div><div class="b">${s}</div></div>`).join("");
@@ -358,7 +360,7 @@ function renderShelf(){
   } else {
     h+=`<div class="warn ok">✓ Bei ${days} Tag${days>1?"en":""} kannst du alle Gläser am Sonntag komplett füllen.</div>`;
   }
-  h+=`<p class="how"><b>Bananenbrot</b> hält gut verschlossen im Kühlschrank <b>4–5 Tage</b> – reicht für Mo–Fr. Wird es Freitag zu trocken: Scheibe kurz toasten. Ab Tag 6 Scheiben einfrieren (Gefrierbeutel, einzeln entnehmen, 20 min auftauen).</p>`;
+  h+=`<p class="how"><b>Bananenbrot</b> hält gut verschlossen im Kühlschrank <b>ca. 4 Tage</b> (die Heidelbeeren machen es saftiger, aber etwas kürzer haltbar). Wird es Freitag zu trocken: Scheibe kurz toasten. Ab Tag 6 Scheiben einfrieren (Gefrierbeutel, einzeln entnehmen, 20 min auftauen).</p>`;
   h+=`<p class="how"><b>Toppings:</b> TK-Himbeeren halten ewig – abends aufs Glas legen, morgens sind sie aufgetaut. Geöffneter Skyr hält ca. 3–5 Tage; den ältesten Becher zuerst aufbrauchen.</p>`;
   $("shelf").innerHTML=h;
 }
@@ -392,7 +394,7 @@ function renderRecipes(){
   <span class="pill hl">Protein <b>≈ ${g.protein} g</b></span><span class="pill">${days} Gläser</span>
   <p class="how">Hafer, Chia, Kakao${whey?", Whey":""} ins Glas, ${g.skyrIn} g Skyr, Honig und Milch dazu, verrühren, Kühlschrank. Topping (Skyr, Himbeeren, Schokolade) erst morgens.</p>`;
   $("recBread").innerHTML=`<div class="rec">
-    ${row("5","reife Bananen (4 in den Teig, 1 längs halbiert obendrauf)")}
+    ${row(b.bananas,"große, reife Bananen (2½ in den Teig, ½ längs halbiert obendrauf)")}
     ${row("2","Eier")}
     ${row(b.skyr+" g","Skyr")}
     ${row(b.flour+" g","Mehl"+(whey?" (statt 70 g)":""))}
@@ -400,11 +402,11 @@ function renderRecipes(){
     ${whey?row("2 EL","Milch extra (wegen Whey)"):""}
     ${row("1 TL","Backpulver")}
     ${row("1 TL","Zimt")}
-    ${row(b.cocoa+" g","Backkakao")}
-    ${row(b.choc+" g","Zartbitterschokolade / Choco Chunks")}
+    ${row(b.blue+" g","Heidelbeeren (frisch oder TK) + 1 TL Mehl zum Wälzen")}
+    ${row("optional","1 EL Honig – 3 Bananen süßen weniger als 5")}
   </div>
   <span class="pill hl">Backzeit <b>${b.bake} min</b></span><span class="pill">200 °C O/U</span>
-  <p class="how">Bananen zerdrücken, mit Eiern, Skyr, Mehl${whey?", Whey, Milch":""}, Backpulver und Zimt verrühren. Ein Drittel abnehmen, in den Rest Kakao und Schoko einrühren. Abwechselnd in die Form schichten, einmal durchziehen, mit Bananenhälften toppen. ${b.bake} min backen. Abkühlen, schneiden, in einer Dose in den Kühlschrank.</p>`;
+  <p class="how">Bananen zerdrücken, mit Eiern, Skyr, Mehl${whey?", Whey, Milch":""}, Backpulver und Zimt verrühren. Heidelbeeren in Mehl wälzen und vorsichtig unterheben, in die Form füllen, mit der Bananenhälfte toppen. ${b.bake} min backen. Abkühlen, schneiden, in einer Dose in den Kühlschrank. <a href="rezepte.html#brot" style="color:var(--accent2)">Schritt für Schritt →</a></p>`;
 }
 
 

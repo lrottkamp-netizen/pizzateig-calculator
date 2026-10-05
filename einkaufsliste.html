@@ -71,6 +71,12 @@
   </div>
 
   <div class="card">
+    <h2>🫐 Bananenbrot (mittags) <span id="c2"></span></h2>
+    <div id="l2"></div>
+    <div class="hint"><a href="rezepte.html#brot" style="color:var(--accent2)">Heidelbeer-Bananenbrot: Rezept &amp; Schritte →</a> · Skyr dafür steckt schon im 500-g-Becher oben.</div>
+  </div>
+
+  <div class="card">
     <h2>🏠 Zuhause <span id="c3"></span></h2>
     <div id="l3"></div>
   </div>
@@ -91,19 +97,26 @@ const LISTS={
     ["ban","🍌 Obst","Banane, reif","1 Stück","Banana Bread Oats",null],
     ["birne","🍌 Obst","Birne, regional","1 Stück","½ für Schoko-Birne, Rest Snack",null],
     ["apfel","🍌 Obst","Apfel, regional","1 Stück","½ für Cookie Dough, Rest Snack",null],
-    ["skyr","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","270 g",1.29],
-    ["milch","🥛 Kühlregal","ja! H-Milch 1,5 %","1 × 1-l-Packung","ca. 400 ml",0.85],
+    ["skyr","🥛 Kühlregal","ja! Skyr Natur","1 × 500-g-Becher","420 g · Gläser 270 g + Brot 150 g",1.29],
+    ["milch","🥛 Kühlregal","ja! H-Milch 1,5 %","1 × 1-l-Packung","ca. 430 ml · inkl. 2 EL fürs Brot",0.85],
     ["hafer","🌾 Vorrat","ja! Zarte Haferflocken","1 × 500-g-Packung","135 g",0.69],
     ["chia","🌾 Vorrat","REWE Bio Chia-Samen","1 × 300-g-Beutel","30 g",1.85],
     ["wal","🌾 Vorrat","ja! Walnusskerne <small>optional</small>","1 × 200-g-Beutel","ein paar · Banana Bread",2.49],
     ["zb","🍫 Süßes","ja! Zartbitter-Schokolade","1 × 100-g-Tafel","30 g",0.89]
   ],
+  l2:[
+    ["bban","🍌 Obst","Bananen, groß &amp; reif","3 Stück","2½ Teig + ½ oben",null],
+    ["blue","🍌 Obst","Heidelbeeren (frisch oder TK)","1 × 125-g-Schale","125 g",2.89],
+    ["eier","🥛 Kühlregal","Eier","1 × 6er-Packung","2 Stück",null],
+    ["mehl","🧁 Backen","Mehl Type 405","1 × 1-kg-Packung","40 g",null]
+  ],
   l3:[
-    ["prot","✅ Hast du schon","Proteinpulver","—","50 g (+25 g optional)",null],
+    ["prot","✅ Hast du schon","Proteinpulver","—","80 g (Gläser 50 g + Brot 30 g)",null],
     ["emus","✅ Hast du schon","Erdnussmus","—","15 g",null],
     ["kak","🏠 Prüfen","Backkakao","—","10 g",null],
     ["hon","🏠 Prüfen","Honig","—","20 g",null],
-    ["zimt","🏠 Prüfen","Zimt","—","1 TL",null],
+    ["zimt","🏠 Prüfen","Zimt","—","2 TL",null],
+    ["bp","🏠 Prüfen","Backpulver","—","1 TL",null],
     ["salz","🏠 Prüfen","Salz","—","1 Prise",null]
   ]
 };
@@ -112,7 +125,7 @@ let checked={};
 try{ checked=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){}
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(checked)); }catch(e){} }
 function render(){
-  ["l1","l3"].forEach(l=>{
+  ["l1","l2","l3"].forEach(l=>{
     let h="", last=null, done=0;
     for(const [id,g,nm,pk,ex,pr] of LISTS[l]){
       if(g && g!==last){ h+=`<div class="grp">${g}</div>`; last=g; }
@@ -130,8 +143,8 @@ document.addEventListener("click",e=>{
 });
 document.getElementById("reset").addEventListener("click",()=>{ checked={}; save(); render(); });
 render();
-const all=[...LISTS.l1], sum=all.reduce((a,i)=>a+(i[5]||0),0), opt=all.filter(i=>i[2].includes("optional")).reduce((a,i)=>a+(i[5]||0),0);
-document.getElementById("sum").innerHTML=`Grob <b>≈ ${eur(sum)}</b> für die Positionen mit Preis, ohne die optionalen Nüsse <b>≈ ${eur(sum-opt)}</b>. Dazu Banane, Birne und Apfel. Preise: zuletzt gemeldete REWE-Preise, je nach Markt anders.`;
+const all=[...LISTS.l1,...LISTS.l2], sum=all.reduce((a,i)=>a+(i[5]||0),0), opt=all.filter(i=>i[2].includes("optional")).reduce((a,i)=>a+(i[5]||0),0);
+document.getElementById("sum").innerHTML=`Grob <b>≈ ${eur(sum)}</b> für die Positionen mit Preis, ohne die optionalen Nüsse <b>≈ ${eur(sum-opt)}</b>. Dazu Bananen, Birne, Apfel, Eier und Mehl. Preise: zuletzt gemeldete REWE-Preise, je nach Markt anders.`;
 </script>
 </body>
 </html>

@@ -139,27 +139,39 @@ const R = [
     "TK-Beeren obendrauf, Deckel zu, Kühlschrank – bis morgens sind sie aufgetaut."],
   tip:"<b>Geschichtet max. 3 Tage</b>, danach weicht der Kuchen durch. Kuchen &amp; Jam halten getrennt 5 Tage – wer mag, schichtet Pot 2 erst Dienstagabend." },
 
-{ id:"brot", day:"Mittags · Mo–Fr", title:"Marmor-Bananenbrot ohne Zucker", img:null,
-  by:"pia_nutrition", link:null, orig:true,
-  meta:"1 Kastenform · <b>~10 Scheiben</b> · 15 min + 25–27 min Backen",
-  ing:[["5","reife Bananen (4 in den Teig, 1 obendrauf)"],["2","Eier"],["150 g","Skyr"],["40 g","Mehl"],["30 g","Proteinpulver Vanille (statt weiterer 30 g Mehl)"],["2 EL","Milch extra"],["1 TL","Backpulver"],["1 TL","Zimt"],["12 g","Backkakao"],["60 g","Zartbitter / Choco Chunks"]],
+{ id:"brot", day:"Mittags · Mo–Fr", title:"Heidelbeer-Bananenbrot ohne Zucker", img:null, emoji:"🫐",
+  by:"pia_nutrition (Grundrezept)", link:null, orig:false,
+  meta:"1 Kastenform · <b>~10 Scheiben</b> · 15 min + 28–30 min Backen",
+  ing:[["3","große, reife Bananen (2½ in den Teig, ½ obendrauf)"],["2","Eier"],["150 g","Skyr"],["40 g","Mehl + 1 TL zum Wälzen"],["30 g","Proteinpulver Vanille (statt weiterer 30 g Mehl)"],["2 EL","Milch extra"],["1 TL","Backpulver"],["1 TL","Zimt"],["125 g","Heidelbeeren (frisch oder TK)"],["optional","1 EL Honig"]],
   steps:[
     "Ofen auf <b>200 °C Ober-/Unterhitze</b> vorheizen, Kastenform fetten oder mit Backpapier auslegen.",
-    "4 Bananen zerdrücken, mit Eiern, Skyr, Mehl, Proteinpulver, Milch, Backpulver und Zimt verrühren.",
-    "<b>Ein Drittel</b> des Teigs abnehmen. In den Rest Kakao und gehackte Schokolade rühren.",
-    "Hell und dunkel <b>abwechselnd</b> in die Form schichten, einmal mit der Gabel durchziehen.",
-    "5. Banane längs halbieren und mit der Schnittfläche nach oben auflegen.",
-    "<b>25–27 min</b> backen (mit Proteinpulver 3–5 min kürzer). Stäbchenprobe.",
+    "<b>2½ Bananen</b> mit der Gabel fein zerdrücken. Die restliche ½ Banane längs halbieren und beiseitelegen.",
+    "Eier, Skyr, Mehl, Proteinpulver, Milch, Backpulver, Zimt (und Honig) dazu und glatt verrühren.",
+    "Heidelbeeren in <b>1 TL Mehl wälzen</b> – dann sinken sie beim Backen nicht nach unten. TK-Beeren gefroren verwenden, nicht auftauen.",
+    "Beeren <b>vorsichtig unterheben</b> (nicht rühren, sonst platzen sie und färben den Teig lila).",
+    "Teig in die Form, Bananenhälften mit der Schnittfläche nach oben auflegen, ein paar Heidelbeeren obendrauf drücken.",
+    "<b>28–30 min</b> backen (ohne Proteinpulver 32–35 min). Stäbchenprobe an einer Stelle <b>ohne Beere</b>.",
     "10 min in der Form, dann auf dem Gitter komplett abkühlen. In 10 Scheiben schneiden, in einer Dose in den Kühlschrank."],
-  tip:"Mittags 2 Scheiben + 150 g Skyr. Vor dem Training 2 Scheiben mit 90–120 min Vorlauf, sonst 1 Scheibe + Banane. Hält 4–5 Tage." }
+  tip:"🍂 Frische Heidelbeeren haben jetzt keine Saison (125-g-Schale ≈ 2,89 €) – TK schmeckt im Brot genauso.<br>Mittags 2 Scheiben + 150 g Skyr. Vor dem Training 2 Scheiben mit 90–120 min Vorlauf, sonst 1 Scheibe + Banane. <b>Hält 4 Tage</b> – die Beeren machen es saftiger, aber etwas kürzer haltbar." },
+
+{ id:"marmor", day:"Variante", title:"Marmor-Bananenbrot ohne Zucker", img:null, emoji:"🍫",
+  by:"pia_nutrition", link:null, orig:true,
+  meta:"1 Kastenform · ~10 Scheiben · 15 min + 25–27 min Backen",
+  ing:[["5","reife Bananen (4 in den Teig, 1 obendrauf)"],["2","Eier"],["150 g","Skyr"],["40 g","Mehl"],["30 g","Proteinpulver Vanille"],["2 EL","Milch extra"],["1 TL","Backpulver"],["1 TL","Zimt"],["12 g","Backkakao"],["60 g","Zartbitter / Choco Chunks"]],
+  steps:[
+    "Ofen auf 200 °C O/U, 4 Bananen zerdrücken, mit Eiern, Skyr, Mehl, Proteinpulver, Milch, Backpulver und Zimt verrühren.",
+    "Ein Drittel abnehmen, in den Rest Kakao und Schokolade rühren.",
+    "Abwechselnd schichten, einmal durchziehen, 5. Banane längs halbiert auflegen.",
+    "25–27 min backen, abkühlen, in 10 Scheiben schneiden."],
+  tip:"Die ursprüngliche Version mit Kakao-Marmorierung." }
 ];
 
 const row = i => i.sec ? `<div class="sec" style="grid-column:1/-1">${i.sec}</div>` : `<div class="q">${i[0]}</div><div>${i[1]}</div>`;
-document.getElementById("jump").innerHTML = R.map(r=>`<a href="#${r.id}"><b>${r.day.split(" ·")[0].replace("Extra","➕")}</b> ${r.title.replace(" Overnight Oats"," Oats").replace(" Breakfast-Cake-Pots"," Pots").replace(" ohne Zucker","")}</a>`).join("");
+document.getElementById("jump").innerHTML = R.map(r=>`<a href="#${r.id}"><b>${r.day.split(" ·")[0].replace("Extra","➕")}</b> ${r.title.replace(" Overnight Oats"," Oats").replace(" Breakfast-Cake-Pots"," Pots").replace(" ohne Zucker","").replace("-Bananenbrot"," Brot")}</a>`).join("");
 document.getElementById("recipes").innerHTML = R.map(r=>`
   <div class="card" id="${r.id}">
     <div class="top">
-      ${r.img ? `<a href="${r.link}" target="_blank" rel="noopener"><img src="${r.img}" alt="${r.title}" loading="lazy"></a>` : `<div class="ph">🍌</div>`}
+      ${r.img ? `<a href="${r.link}" target="_blank" rel="noopener"><img src="${r.img}" alt="${r.title}" loading="lazy"></a>` : `<div class="ph">${r.emoji||"🍌"}</div>`}
       <div>
         <div class="day">${r.day}</div>
         <h2>${r.title}</h2>
